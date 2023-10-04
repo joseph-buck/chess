@@ -1,6 +1,7 @@
 package passoffTests;
 
 import chess.*;
+import chess.pieces.*;
 
 /**
  * Used for testing your code
@@ -11,8 +12,7 @@ public class TestFactory {
     //Chess Functions
     //------------------------------------------------------------------------------------------------------------------
     public static ChessBoard getNewBoard(){
-        // FIXME
-		return null;
+		return new Board();
     }
 
     public static ChessGame getNewGame(){
@@ -21,18 +21,22 @@ public class TestFactory {
     }
 
     public static ChessPiece getNewPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type){
-        // FIXME
-		return null;
+        switch (type) {
+            case PAWN:      return new Pawn(pieceColor);
+            case ROOK:      return new Rook(pieceColor);
+            case BISHOP:    return new Bishop(pieceColor);
+            case QUEEN:     return new Queen(pieceColor);
+            case KING:      return new King(pieceColor);
+        }
+        return null;
     }
 
     public static ChessPosition getNewPosition(Integer row, Integer col){
-        // FIXME
-		return null;
+		return new Position(row, col);
     }
 
     public static ChessMove getNewMove(ChessPosition startPosition, ChessPosition endPosition, ChessPiece.PieceType promotionPiece){
-        // FIXME
-		return null;
+		return new Move(startPosition, endPosition, promotionPiece);
     }
     //------------------------------------------------------------------------------------------------------------------
 

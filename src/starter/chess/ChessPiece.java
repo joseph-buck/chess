@@ -19,7 +19,7 @@ public interface ChessPiece {
         BISHOP,
         KNIGHT,
         ROOK,
-        PAWN
+        PAWN,
     }
 
     /**
