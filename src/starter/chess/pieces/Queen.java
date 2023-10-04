@@ -1,7 +1,10 @@
 package chess.pieces;
 
 import chess.*;
+
 import java.util.Collection;
+import java.util.HashSet;
+
 
 public class Queen extends Piece {
 
@@ -12,22 +15,17 @@ public class Queen extends Piece {
 
     @Override
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        // Make another class I can import here and in Bishop/Rook (and maybe king) to loop through directions
+        Collection<ChessMove> moves = new HashSet<>();
 
-        // For forward, left, right, backward, loop 1 to 8:
-            // If currSquare is out of bounds: break
-            // Else if currSquare is vacant:
-                // Add current square to collection
-            // Else if currSquare is occupied by enemy:
-                // Add currSquare to collection
-            //Else: break
-        // For forward-left, forward-right, backward-left, backward-right, loop 1 to 8:
-            // If currSquare is out of bounds: break
-            // Else if currSquare is vacant:
-                // Add current square to collection
-            // Else if currSquare is occupied by enemy:
-                // Add currSquare to collection
-            //Else: break
-        return null;
+        moves.addAll(getLongDistanceMoves(board, myPosition, 1, 0));
+        moves.addAll(getLongDistanceMoves(board, myPosition, -1, 0));
+        moves.addAll(getLongDistanceMoves(board, myPosition, 0, 1));
+        moves.addAll(getLongDistanceMoves(board, myPosition, 0, -1));
+        moves.addAll(getLongDistanceMoves(board, myPosition, 1, 1));
+        moves.addAll(getLongDistanceMoves(board, myPosition, -1, -1));
+        moves.addAll(getLongDistanceMoves(board, myPosition, 1, -1));
+        moves.addAll(getLongDistanceMoves(board, myPosition, -1, 1));
+
+        return moves;
     }
 }

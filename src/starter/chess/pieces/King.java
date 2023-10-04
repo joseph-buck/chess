@@ -1,7 +1,9 @@
 package chess.pieces;
 
 import chess.*;
+
 import java.util.Collection;
+import java.util.HashSet;
 
 public class King extends Piece {
 
@@ -12,8 +14,17 @@ public class King extends Piece {
 
     @Override
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        // Loop through all neighbors:
-            // Each neighbor that is either empty or occupied by an enemy is added to the collection
-        return null;
+        Collection<ChessMove> moves = new HashSet<>();
+
+        moves.addAll(getSingleMoves(board, myPosition, 1, 0));
+        moves.addAll(getSingleMoves(board, myPosition, 1, 1));
+        moves.addAll(getSingleMoves(board, myPosition, 0, 1));
+        moves.addAll(getSingleMoves(board, myPosition, -1, 1));
+        moves.addAll(getSingleMoves(board, myPosition, -1, 0));
+        moves.addAll(getSingleMoves(board, myPosition, -1, -1));
+        moves.addAll(getSingleMoves(board, myPosition, 0, -1));
+        moves.addAll(getSingleMoves(board, myPosition, 1, -1));
+
+        return moves;
     }
 }

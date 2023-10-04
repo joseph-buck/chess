@@ -1,7 +1,10 @@
 package chess.pieces;
 
 import chess.*;
+
 import java.util.Collection;
+import java.util.HashSet;
+
 
 public class Bishop extends Piece {
 
@@ -12,13 +15,13 @@ public class Bishop extends Piece {
 
     @Override
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        // For forward-left, forward-right, backward-left, backward-right, loop 1 to 8:
-            // If currSquare is out of bounds: break
-            // Else if currSquare is vacant:
-                // Add current square to collection
-            // Else if currSquare is occupied by enemy:
-                // Add currSquare to collection
-            //Else: break
-        return null;
+        Collection<ChessMove> moves = new HashSet<>();
+
+        moves.addAll(getLongDistanceMoves(board, myPosition, 1, 1));
+        moves.addAll(getLongDistanceMoves(board, myPosition, -1, -1));
+        moves.addAll(getLongDistanceMoves(board, myPosition, 1, -1));
+        moves.addAll(getLongDistanceMoves(board, myPosition, -1, 1));
+
+        return moves;
     }
 }
