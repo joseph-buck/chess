@@ -29,7 +29,18 @@ public class Move implements ChessMove {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Move move = (Move) o;
-        return Objects.equals(startPosition, move.startPosition) && Objects.equals(endPosition, move.endPosition) && promotionPiece == move.promotionPiece;
+        return Objects.equals(startPosition, move.startPosition)
+                && Objects.equals(endPosition, move.endPosition)
+                && promotionPiece == move.promotionPiece;
+    }
+
+    @Override
+    public String toString() {
+        return "Move{" +
+                "startPosition=" + startPosition +
+                ", endPosition=" + endPosition +
+                ", promotionPiece=" + promotionPiece +
+                '}' + "\n";
     }
 
     @Override
@@ -41,16 +52,4 @@ public class Move implements ChessMove {
     public ChessPiece.PieceType getPromotionPiece() {
         return promotionPiece;
     }
-
-    //@Override
-    //public boolean equals(ChessMove compMove) {
-    //    System.out.println("INSIDE equals");
-    //    if ((this.startPosition.equals(compMove.getStartPosition()))
-    //            && (this.endPosition.equals(compMove.getEndPosition()))) {
-    //        if (this.promotionPiece == compMove.getPromotionPiece()) {
-    //            return true;
-    //        }
-    //    }
-    //    return false;
-    //}
 }

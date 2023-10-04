@@ -71,14 +71,20 @@ public class Pawn extends Piece {
 
         Position newPosition = new Position(row + direction, col + horizontalMove);
         ChessPiece diagonalPiece = board.getPiece(newPosition);
+
         if (diagonalPiece != null) {
-            if (((whiteTeam) && (row == 7)) || ((!whiteTeam) && (row == 2))) {
+            if (((whiteTeam) && (row == 7) && (diagonalPiece.getTeamColor() == ChessGame.TeamColor.BLACK))
+                    || ((!whiteTeam) && (row == 2) && (diagonalPiece.getTeamColor() == ChessGame.TeamColor.WHITE))) {
                 for (PieceType promotePiece :  List.of(PieceType.ROOK, PieceType.KNIGHT,
                         PieceType.BISHOP, PieceType.QUEEN)) {
                     diagonalMoves.add(new Move(myPosition, newPosition, promotePiece));
                 }
             } else {
-                diagonalMoves.add(new Move(myPosition, newPosition, null));
+                if ((whiteTeam) && (diagonalPiece.getTeamColor() == ChessGame.TeamColor.BLACK)) {
+                    diagonalMoves.add(new Move(myPosition, newPosition, null));
+                } else if ((!whiteTeam) && (diagonalPiece.getTeamColor() == ChessGame.TeamColor.WHITE)) {
+                    diagonalMoves.add(new Move(myPosition, newPosition, null));
+                }
             }
         }
         return diagonalMoves;

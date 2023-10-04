@@ -6,23 +6,22 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 public class Board implements ChessBoard {
-    private HashMap<ChessPiece, ChessPosition> piecePositions;
+    private HashMap<ChessPosition, ChessPiece> piecePositions;
 
     public Board() {
         piecePositions = new HashMap<>();
-        //resetBoard();
     }
 
     @Override
     public void addPiece(ChessPosition position, ChessPiece piece) {
-        piecePositions.put(piece, position);
+        piecePositions.put(position, piece);
     }
 
     @Override
     public ChessPiece getPiece(ChessPosition position) {
-        for (Entry<ChessPiece, ChessPosition> piecePos : piecePositions.entrySet()) {
-            if (position.equals(piecePos.getValue())) {
-                return piecePos.getKey();
+        for (Entry<ChessPosition, ChessPiece> piecePos : piecePositions.entrySet()) {
+            if (position.equals(piecePos.getKey())) {
+                return piecePos.getValue();
             }
         }
         return null;

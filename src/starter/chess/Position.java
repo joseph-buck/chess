@@ -21,10 +21,6 @@ public class Position implements ChessPosition {
         return this.column;
     }
 
-    public void setRow(int newRow) {
-        this.row = newRow;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -38,13 +34,19 @@ public class Position implements ChessPosition {
         return Objects.hash(row, column);
     }
 
+    public void setRow(int newRow) {
+        this.row = newRow;
+    }
+
     public void setColumn(int newColumn) {
         this.column = newColumn;
     }
 
-    //@Override
-    //public boolean equals(ChessPosition compPos) {
-     //   return (this.getRow() == compPos.getRow())
-    //            && (this.getColumn() == compPos.getColumn());
-    //}
+    @Override
+    public String toString() {
+        return "Position{" +
+                "row=" + row +
+                ", column=" + column +
+                '}' + "\n";
+    }
 }

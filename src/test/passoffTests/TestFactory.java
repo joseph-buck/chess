@@ -24,6 +24,7 @@ public class TestFactory {
         switch (type) {
             case PAWN:      return new Pawn(pieceColor);
             case ROOK:      return new Rook(pieceColor);
+            case KNIGHT:    return new Knight(pieceColor);
             case BISHOP:    return new Bishop(pieceColor);
             case QUEEN:     return new Queen(pieceColor);
             case KING:      return new King(pieceColor);
