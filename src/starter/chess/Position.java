@@ -34,19 +34,11 @@ public class Position implements ChessPosition {
         return Objects.hash(row, column);
     }
 
-    public void setRow(int newRow) {
-        this.row = newRow;
-    }
-
-    public void setColumn(int newColumn) {
-        this.column = newColumn;
-    }
-
     @Override
     public String toString() {
         return "Position{" +
                 "row=" + row +
                 ", column=" + column +
-                '}' + "\n";
+                '}';
     }
 }

@@ -1,7 +1,9 @@
 package chess.pieces;
 
 import chess.*;
-import chess.ChessPiece.PieceType;
+import static chess.ChessGame.TeamColor.BLACK;
+import static chess.ChessGame.TeamColor.WHITE;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -15,8 +17,7 @@ public class Pawn extends Piece {
     }
 
     @Override
-    public Collection<ChessMove> pieceMoves(
-            ChessBoard board, ChessPosition myPosition) {
+    public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         Collection<ChessMove> moves = new HashSet<>();
 
         moves.addAll(getForwardMoves(board, myPosition));
@@ -30,17 +31,14 @@ public class Pawn extends Piece {
         int row = myPosition.getRow();
         int col = myPosition.getColumn();
 
-        boolean whiteTeam = (getTeamColor() == ChessGame.TeamColor.WHITE);
+        boolean whiteTeam = (getTeamColor() == WHITE);
         int startRow = whiteTeam ? 2 : 7;
         int direction = whiteTeam ? 1 : -1;
 
         Position newPosition = new Position(row + direction, col);
         if (board.getPiece(newPosition) == null) {
             if (((whiteTeam) && (row == 7)) || ((!whiteTeam) && (row == 2))) {
-                for (PieceType promotePiece :  List.of(PieceType.ROOK, PieceType.KNIGHT,
-                        PieceType.BISHOP, PieceType.QUEEN)) {
-                    forwardMoves.add(new Move(myPosition, newPosition, promotePiece));
-                }
+                forwardMoves.addAll(getPromotionMoves(myPosition, newPosition));
             } else {
                 forwardMoves.add(new Move(myPosition, newPosition, null));
             }
@@ -51,6 +49,16 @@ public class Pawn extends Piece {
             }
         }
         return forwardMoves;
+    }
+
+    private HashSet<ChessMove> getPromotionMoves(ChessPosition myPosition, ChessPosition newPosition) {
+        HashSet<ChessMove> promotionMoves = new HashSet<>();
+
+        for (PieceType promotePiece : List.of(PieceType.ROOK, PieceType.KNIGHT,
+                PieceType.BISHOP, PieceType.QUEEN)) {
+            promotionMoves.add(new Move(myPosition, newPosition, promotePiece));
+        }
+        return promotionMoves;
     }
 
     private HashSet<ChessMove> getDiagonalMoves(
@@ -66,23 +74,19 @@ public class Pawn extends Piece {
         int row = myPosition.getRow();
         int col = myPosition.getColumn();
 
-        boolean whiteTeam = (getTeamColor() == ChessGame.TeamColor.WHITE);
+        boolean whiteTeam = (getTeamColor() == WHITE);
         int direction = whiteTeam ? 1 : -1;
 
         Position newPosition = new Position(row + direction, col + horizontalMove);
         ChessPiece diagonalPiece = board.getPiece(newPosition);
-
         if (diagonalPiece != null) {
-            if (((whiteTeam) && (row == 7) && (diagonalPiece.getTeamColor() == ChessGame.TeamColor.BLACK))
-                    || ((!whiteTeam) && (row == 2) && (diagonalPiece.getTeamColor() == ChessGame.TeamColor.WHITE))) {
-                for (PieceType promotePiece :  List.of(PieceType.ROOK, PieceType.KNIGHT,
-                        PieceType.BISHOP, PieceType.QUEEN)) {
-                    diagonalMoves.add(new Move(myPosition, newPosition, promotePiece));
-                }
+            if (((whiteTeam) && (row == 7) && (diagonalPiece.getTeamColor() == BLACK))
+                    || ((!whiteTeam) && (row == 2) && (diagonalPiece.getTeamColor() == WHITE))) {
+                diagonalMoves.addAll(getPromotionMoves(myPosition, newPosition));
             } else {
-                if ((whiteTeam) && (diagonalPiece.getTeamColor() == ChessGame.TeamColor.BLACK)) {
+                if ((whiteTeam) && (diagonalPiece.getTeamColor() == BLACK)) {
                     diagonalMoves.add(new Move(myPosition, newPosition, null));
-                } else if ((!whiteTeam) && (diagonalPiece.getTeamColor() == ChessGame.TeamColor.WHITE)) {
+                } else if ((!whiteTeam) && (diagonalPiece.getTeamColor() == WHITE)) {
                     diagonalMoves.add(new Move(myPosition, newPosition, null));
                 }
             }

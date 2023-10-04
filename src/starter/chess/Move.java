@@ -5,7 +5,7 @@ import java.util.Objects;
 public class Move implements ChessMove {
     private final ChessPosition startPosition;
     private final ChessPosition endPosition;
-    private ChessPiece.PieceType promotionPiece = null;
+    private final ChessPiece.PieceType promotionPiece;
 
     public Move(ChessPosition startPosition, ChessPosition endPosition,
                 ChessPiece.PieceType promotionPiece) {
@@ -25,6 +25,11 @@ public class Move implements ChessMove {
     }
 
     @Override
+    public ChessPiece.PieceType getPromotionPiece() {
+        return promotionPiece;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -35,21 +40,16 @@ public class Move implements ChessMove {
     }
 
     @Override
-    public String toString() {
-        return "Move{" +
-                "startPosition=" + startPosition +
-                ", endPosition=" + endPosition +
-                ", promotionPiece=" + promotionPiece +
-                '}' + "\n";
-    }
-
-    @Override
     public int hashCode() {
         return Objects.hash(startPosition, endPosition, promotionPiece);
     }
 
     @Override
-    public ChessPiece.PieceType getPromotionPiece() {
-        return promotionPiece;
+    public String toString() {
+        return "Move {\n" +
+                "\tstartPosition=" + startPosition +
+                ",\n\tendPosition=" + endPosition +
+                ",\n\tpromotionPiece=" + promotionPiece +
+                "\n}" + "\n";
     }
 }

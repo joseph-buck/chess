@@ -1,9 +1,12 @@
 package chess;
 
 import chess.pieces.*;
+import static chess.ChessGame.TeamColor.WHITE;
+import static chess.ChessGame.TeamColor.BLACK;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
+
 
 public class Board implements ChessBoard {
     private HashMap<ChessPosition, ChessPiece> piecePositions;
@@ -40,40 +43,39 @@ public class Board implements ChessBoard {
 
     private void setPawns() {
         for (int i = 1; i < 9; i++) {
-            addPiece(new Position(2, i), new Pawn(ChessGame.TeamColor.WHITE));
-            addPiece(new Position(7, i), new Pawn(ChessGame.TeamColor.BLACK));
+            addPiece(new Position(2, i), new Pawn(WHITE));
+            addPiece(new Position(7, i), new Pawn(BLACK));
         }
     }
 
     private void setRooks() {
-        addPiece(new Position(1, 1), new Rook(ChessGame.TeamColor.WHITE));
-        addPiece(new Position(1, 8), new Rook(ChessGame.TeamColor.WHITE));
-        addPiece(new Position(8, 1), new Rook(ChessGame.TeamColor.BLACK));
-        addPiece(new Position(8, 8), new Rook(ChessGame.TeamColor.BLACK));
+        addPiece(new Position(1, 1), new Rook(WHITE));
+        addPiece(new Position(1, 8), new Rook(WHITE));
+        addPiece(new Position(8, 1), new Rook(BLACK));
+        addPiece(new Position(8, 8), new Rook(BLACK));
     }
 
     private void setKnights() {
-        addPiece(new Position(1, 2), new Knight(ChessGame.TeamColor.WHITE));
-        addPiece(new Position(1, 7), new Knight(ChessGame.TeamColor.WHITE));
-        addPiece(new Position(8, 2), new Knight(ChessGame.TeamColor.BLACK));
-        addPiece(new Position(8, 7), new Knight(ChessGame.TeamColor.BLACK));
+        addPiece(new Position(1, 2), new Knight(WHITE));
+        addPiece(new Position(1, 7), new Knight(WHITE));
+        addPiece(new Position(8, 2), new Knight(BLACK));
+        addPiece(new Position(8, 7), new Knight(BLACK));
     }
 
     private void setBishops() {
-        addPiece(new Position(1, 3), new Bishop(ChessGame.TeamColor.WHITE));
-        addPiece(new Position(1, 6), new Bishop(ChessGame.TeamColor.WHITE));
-        addPiece(new Position(8, 3), new Bishop(ChessGame.TeamColor.BLACK));
-        addPiece(new Position(8, 6), new Bishop(ChessGame.TeamColor.BLACK));
+        addPiece(new Position(1, 3), new Bishop(WHITE));
+        addPiece(new Position(1, 6), new Bishop(WHITE));
+        addPiece(new Position(8, 3), new Bishop(BLACK));
+        addPiece(new Position(8, 6), new Bishop(BLACK));
     }
 
     private void setQueens() {
-        addPiece(new Position(1, 4), new Queen(ChessGame.TeamColor.WHITE));
-        addPiece(new Position(8, 4), new Queen(ChessGame.TeamColor.BLACK));
+        addPiece(new Position(1, 4), new Queen(WHITE));
+        addPiece(new Position(8, 4), new Queen(BLACK));
     }
 
     private void setKings() {
-        addPiece(new Position(1, 5), new King(ChessGame.TeamColor.WHITE));
-        addPiece(new Position(8, 5), new King(ChessGame.TeamColor.BLACK));
+        addPiece(new Position(1, 5), new King(WHITE));
+        addPiece(new Position(8, 5), new King(BLACK));
     }
-
 }
