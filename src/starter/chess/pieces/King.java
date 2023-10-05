@@ -5,6 +5,7 @@ import chess.*;
 import java.util.Collection;
 import java.util.HashSet;
 
+
 public class King extends Piece {
 
     public King(ChessGame.TeamColor teamColor) {

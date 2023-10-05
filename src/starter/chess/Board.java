@@ -20,6 +20,10 @@ public class Board implements ChessBoard {
         piecePositions.put(position, piece);
     }
 
+    public void removePiece(ChessPosition position) {
+        piecePositions.remove(position);
+    }
+
     @Override
     public ChessPiece getPiece(ChessPosition position) {
         for (Entry<ChessPosition, ChessPiece> piecePos : piecePositions.entrySet()) {
