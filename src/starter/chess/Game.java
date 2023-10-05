@@ -30,14 +30,45 @@ public class Game implements ChessGame {
 
     @Override
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        Collection<ChessMove> moves = new HashSet<>();
+        Collection<ChessMove> grossMoves = new HashSet<>();
+        Collection<ChessMove> validMoves = new HashSet<>();
 
         ChessPiece myPiece = board.getPiece(startPosition);
         if (myPiece != null) {
-            moves = new HashSet<>(
-                    myPiece.pieceMoves(board, startPosition));
+            grossMoves = new HashSet<>(myPiece.pieceMoves(board, startPosition));
         }
-        return moves;
+
+
+
+
+        for (ChessMove move : grossMoves) {
+            ChessPosition endPosition = move.getEndPosition();
+            ChessPiece sourcePiece = board.getPiece(startPosition);
+            ChessPiece destinationPiece = board.getPiece(endPosition);
+
+            carryOutMove(move, sourcePiece);
+            if (!isInCheck(sourcePiece.getTeamColor())) {
+                validMoves.add(move);
+            }
+            backTrackMove(move, sourcePiece, destinationPiece);
+        }
+
+        System.out.println(validMoves);
+        //validMoves = grossMoves;//new HashSet<ChessMove>(getAllLegalMoves(grossMoves, myPiece.getTeamColor()));
+        return validMoves;
+    }
+
+    private Collection<ChessMove> validMovesTEMP(ChessPosition startPosition) {
+        Collection<ChessMove> grossMoves = new HashSet<>();
+        Collection<ChessMove> validMoves = new HashSet<>();
+
+        ChessPiece myPiece = board.getPiece(startPosition);
+        if (myPiece != null) {
+            grossMoves = new HashSet<>(myPiece.pieceMoves(board, startPosition));
+        }
+        //System.out.println(new HashSet<ChessMove>(getAllLegalMoves(grossMoves, myPiece.getTeamColor())));
+        validMoves = grossMoves;//new HashSet<ChessMove>(getAllLegalMoves(grossMoves, myPiece.getTeamColor()));
+        return validMoves;
     }
 
     @Override
@@ -47,8 +78,7 @@ public class Game implements ChessGame {
         ChessPiece sourcePiece = board.getPiece(startPosition);
         ChessPiece destinationPiece = board.getPiece(endPosition);
 
-
-        if (!validMoves(startPosition).contains(move)) {
+        if (!validMovesTEMP(startPosition).contains(move)) {
             throw new InvalidMoveException(String.format(
                     "Move %s is not a valid move", move));
         }
@@ -106,7 +136,7 @@ public class Game implements ChessGame {
                 ChessPosition currPosition = new Position(i, j);
                 ChessPiece currPiece = board.getPiece(currPosition);
                 if ((currPiece != null) && (currPiece.getTeamColor() != teamColor)) {
-                    validMoves = validMoves(currPosition);
+                    validMoves = validMovesTEMP(currPosition);
                     for (ChessMove move : validMoves) {
                         if (move.getEndPosition().equals(kingPosition)) {
                             return true;
@@ -134,7 +164,7 @@ public class Game implements ChessGame {
 
     @Override
     public boolean isInCheckmate(TeamColor teamColor) {
-        Collection<ChessMove> validMoves = getAllValidMoves(teamColor);
+        Collection<ChessMove> validMoves = getTeamValidMoves(teamColor);
         Collection<ChessMove> legalMoves = getAllLegalMoves(validMoves, teamColor);
 
         if ((isInCheck(teamColor) && (legalMoves.isEmpty()))) {
@@ -146,29 +176,9 @@ public class Game implements ChessGame {
 
     @Override
     public boolean isInStalemate(TeamColor teamColor) {
-        Collection<ChessMove> validMoves = getAllValidMoves(teamColor);
+        Collection<ChessMove> validMoves = getTeamValidMoves(teamColor);
         Collection<ChessMove> finalMoves = new HashSet<>();
 
-
-        /*
-        System.out.println(this.teamTurn);
-        System.out.println(teamColor);
-
-        for (ChessMove move : moves) {
-            ChessPosition startPosition = move.getStartPosition();
-            ChessPosition endPosition = move.getEndPosition();
-            ChessPiece sourcePiece = board.getPiece(startPosition);
-            ChessPiece destinationPiece = board.getPiece(endPosition);
-
-            carryOutMove(move, sourcePiece);
-            if (!isInCheck(teamColor)) {
-                finalMoves.add(move);
-            }
-            backTrackMove(move, sourcePiece, destinationPiece);
-        }
-
-        System.out.println(this.teamTurn);
-        System.out.println(teamColor);*/
         finalMoves.addAll(getAllLegalMoves(validMoves, teamColor));
 
         return (finalMoves.isEmpty()) && (this.teamTurn == teamColor);
@@ -193,7 +203,7 @@ public class Game implements ChessGame {
         return finalMoves;
     }
 
-    private Collection<ChessMove> getAllValidMoves(TeamColor teamColor) {
+    private Collection<ChessMove> getTeamValidMoves(TeamColor teamColor) {
         Collection<ChessMove> moves = new HashSet<>();
 
         for (int i = 0; i < 9; i++) {
@@ -201,7 +211,7 @@ public class Game implements ChessGame {
                 ChessPosition currPosition = new Position(i, j);
                 ChessPiece currPiece = board.getPiece(currPosition);
                 if ((currPiece != null) && (currPiece.getTeamColor() == teamColor)) {
-                    moves.addAll(validMoves(currPosition));
+                    moves.addAll(validMovesTEMP(currPosition));
                 }
             }
         }
