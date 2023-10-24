@@ -2,13 +2,15 @@ package dataAccess;
 
 import java.util.Set;
 import java.util.HashSet;
-import model.Game;
+import models.Game;
 
 
 /**
  * GameDAO --- Class for interacting with Game objects in the database.
  */
 public class GameDAO {
+    public static HashSet<Game> games;
+
     /**
      * Method for inserting new Game objects into the database.
      * @param newGame The new Game object to be inserted in the database.
@@ -39,8 +41,12 @@ public class GameDAO {
 
     /**
      * Method for claiming a spot in the game.
-     * @param user
+     * @param userName The username of the person claiming a spot.
+     * @throws DataAccessException
      */
+    public void claimSpot(String userName) throws DataAccessException {
+
+    }
 
     /**
      * Method for updating the fields of a Game object.
@@ -66,8 +72,8 @@ public class GameDAO {
      * User, and AuthToken objects.
      * @throws DataAccessException
      */
-    public void clearDatabase() throws DataAccessException {
-
+    public void removeAllGames() throws DataAccessException {
+        games = new HashSet<Game>();
     }
 
 }

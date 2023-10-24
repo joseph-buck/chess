@@ -1,19 +1,22 @@
 package dataAccess;
 
-import model.AuthToken;
+import models.*;
+import java.util.*;
 
 
 /**
  * AuthDAO --- Class for interacting with AuthToken objects in the database.
  */
 public class AuthDAO {
+    private static HashSet<AuthToken> tokens = new HashSet<AuthToken>();
+
     /**
      * Method for inserting new AuthToken objects into the database
      * @param newToken The new AuthToken object to be inserted
      * @throws DataAccessException
      */
     public void insertToken(AuthToken newToken) throws DataAccessException {
-
+        tokens.add(newToken);
     }
 
     /**
@@ -22,8 +25,14 @@ public class AuthDAO {
      * @return Returns the AuthToken object from the database.
      * @throws DataAccessException
      */
-    public AuthToken readToken(String username) throws DataAccessException {
-        return new AuthToken("", "");
+    public ArrayList<AuthToken> readToken(String username) throws DataAccessException {
+        ArrayList<AuthToken> userTokens = new ArrayList<>();
+        for (AuthToken token : tokens) {
+            if (token.getUsername().compareTo(username) == 0) {
+                userTokens.add(token);
+            }
+        }
+        return userTokens;
     }
 
     /**
@@ -33,17 +42,31 @@ public class AuthDAO {
      *                     object in the database.
      * @throws DataAccessException
      */
-    public void updateToken(String username, AuthToken updatedToken) throws DataAccessException {
-
-    }
+    //public void updateToken(String username, AuthToken updatedToken) throws DataAccessException {
+    //    AuthToken tokenToUpdate = this.readToken(username);
+    //    if (tokenToUpdate != null) {
+    //        tokenToUpdate.setAuthToken(updatedToken.getAuthToken());
+    //        tokenToUpdate.setUsername(updatedToken.getUsername());
+    //    }
+    //}
 
     /**
      * Method for deleting an AuthToken object from the database.
      * @param username The username associated with the object to be deleted.
-     * @param updatedToken The AuthToken object with updated fields.
      * @throws DataAccessException
      */
-    public void removeToken(String username, AuthToken updatedToken) throws DataAccessException {
+    //public void removeToken(String username) throws DataAccessException {
+    //    AuthToken tokenToRemove = this.readToken(username);
+    //    if (tokenToRemove != null) {
+    //        tokens.remove(tokenToRemove);
+    //    }
+    //}//
 
+    public HashSet<AuthToken> getTokens() {
+        return tokens;
+    }
+
+    public void removeAllTokens() {
+        tokens = new HashSet<AuthToken>();
     }
 }
