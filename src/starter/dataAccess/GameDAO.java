@@ -29,6 +29,20 @@ public class GameDAO {
     }
 
     /**
+     * Method for retrieving all Game objects from the database.
+     * @return A set containing all Game objects currently in the database.
+     * @throws DataAccessException
+     */
+    public Set<Game> findAll() throws DataAccessException {
+        return new HashSet<Game>();
+    }
+
+    /**
+     * Method for claiming a spot in the game.
+     * @param user
+     */
+
+    /**
      * Method for updating the fields of a Game object.
      * @param gameID The identifier of the Game to be updated.
      * @param updatedGame The Game object with updated fields.
@@ -56,12 +70,4 @@ public class GameDAO {
 
     }
 
-    /**
-     * Method for retrieving all Game objects from the database.
-     * @return A set containing all Game objects currently in the database.
-     * @throws DataAccessException
-     */
-    public Set<Game> findAll() throws DataAccessException {
-        return new HashSet<Game>();
-    }
 }
