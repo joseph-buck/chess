@@ -1,76 +1,52 @@
 package services.responses;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 /**
  * LoginResponse --- Class for storing the data of a login response
  */
 public class LoginResponse {
-    /**
-     * username - Identifier for the User that is logging in.
-     */
-    private String username;
-    /**
-     * authToken - Authorization token for user who is logging in.
-     */
-    private String authToken;
-    /**
-     * message - Error message.
-     */
-    private String message;
+    private Map<String, Object> loginResponse = new HashMap<>();
 
-    /**
-     * Default Constructor - Initializes all fields to null.
-     */
-    public LoginResponse() {
-        this.username = null;
-        this.authToken = null;
-        this.message = null;
+    public LoginResponse(String username, String authToken,
+                         String message, Integer code) {
+        loginResponse.put("username", username);
+        loginResponse.put("authToken", authToken);
+        loginResponse.put("message", message);
+        loginResponse.put("code", code);
     }
 
-    /**
-     * Constructor - If an error message is supplied, the username and
-     * authToken are initialized to null, and the error message is stored.
-     * @param message User defined error message.
-     */
-    public LoginResponse(String message) {
-        this.username = null;
-        this.authToken = null;
-        this.message = message;
+    public Object getUsername() {
+        return loginResponse.get("username");
     }
 
-    /**
-     * Constructor - If a username and authToken are supplied, they are stored
-     * and the error message is set to null.
-     * @param username User defined username.
-     * @param authToken User defined authToken.
-     */
-    public LoginResponse(String username, String authToken) {
-        this.username = username;
-        this.authToken = authToken;
-        this.message = null;
+    public Object getAuthToken() {
+        return loginResponse.get("authToken");
     }
 
-    public String getUsername() {
-        return this.username;
+    public Object getMessage() {
+        return loginResponse.get("message");
     }
 
-    public String getAuthToken() {
-        return this.authToken;
-    }
-
-    public String getMessage() {
-        return this.message;
+    public int getCode() {
+        return (Integer) loginResponse.get("code");
     }
 
     public void setUsername(String username) {
-        this.username = username;
+        loginResponse.replace("username", username);
     }
 
     public void setAuthToken(String authToken) {
-        this.authToken = authToken;
+        loginResponse.replace("authToken", authToken);
     }
 
     public void setMessage(String message) {
-        this.message = message;
+        loginResponse.replace("message", message);
+    }
+
+    public void setCode(Integer code) {
+        loginResponse.replace("code", code);
     }
 }

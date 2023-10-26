@@ -1,5 +1,10 @@
 package models;
 
+import dataAccess.AuthDAO;
+import dataAccess.DataAccessException;
+
+import java.util.UUID;
+
 
 /**
  * AuthToken --- Class for storing authorization data of users.
@@ -16,12 +21,19 @@ public class AuthToken {
 
     /**
      * Constructor - Sets the authToken code and username for the new token.
-     * @param authToken New code for the AuthToken object
      * @param username Username to be associated with the authToken code
      */
-    public AuthToken(String authToken, String username) {
-        this.authToken = authToken;
-        this.username = username;
+    public AuthToken(Object username) {
+        AuthDAO authDAO = new AuthDAO();
+        this.authToken = UUID.randomUUID().toString();
+        this.username = (String) username;
+        try {
+            authDAO.insertToken(this);
+        } catch (DataAccessException ex) {
+            this.authToken = null;
+            this.username = null;
+        }
+
     }
 
     public String getAuthToken() {

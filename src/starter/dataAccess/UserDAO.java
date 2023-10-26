@@ -18,9 +18,7 @@ public class UserDAO {
      */
     public AuthToken insertUser(User newUser) throws DataAccessException {
         AuthDAO authDAOObj = new AuthDAO();
-        String newTokenString = UUID.randomUUID().toString();
-        AuthToken newToken = new AuthToken(newTokenString,
-                newUser.getUsername());
+        AuthToken newToken = new AuthToken(newUser.getUsername());
         if (this.readUser(newUser.getUsername()) == null) {
             users.add(newUser);
             authDAOObj.insertToken(newToken);

@@ -1,5 +1,6 @@
 package services.responses;
 
+import com.google.gson.annotations.Expose;
 import models.*;
 
 import java.util.*;
@@ -11,7 +12,8 @@ import java.util.*;
 public class RegisterResponse {
     Map<String, Object> registerResponse = new HashMap<>();
 
-    public RegisterResponse(String username, String authToken, String message, Integer code) {
+    public RegisterResponse(String username, String authToken,
+                            String message, Integer code) {
         registerResponse.put("username", username);
         registerResponse.put("authToken", authToken);
         registerResponse.put("message", message);
@@ -44,5 +46,9 @@ public class RegisterResponse {
 
     public void setMessage(String message) {
         registerResponse.replace("message", message);
+    }
+
+    public void setCode(Integer code) {
+        registerResponse.put("code", code);
     }
 }

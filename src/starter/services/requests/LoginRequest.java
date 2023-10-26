@@ -1,42 +1,32 @@
 package services.requests;
 
 
+import java.util.*;
+
 /**
  * LoginRequest --- Class for storing login request information.
  */
 public class LoginRequest {
-    /**
-     * username - Identifier for the User that is logging in.
-     */
-    private String username;
-    /**
-     * password - The string key defined by the User upon registration.
-     */
-    private String password;
+    private Map<String, Object> loginRequest = new HashMap<>();
 
-    /**
-     * Constructor - Initializes fields with user defined values.
-     * @param username User defined username.
-     * @param password User defined password.
-     */
-    public LoginRequest(String username, String password) {
-        this.username = username;
-        this.password = password;
+    public LoginRequest(Object username, Object password) {
+        loginRequest.put("username", username);
+        loginRequest.put("password", password);
     }
 
     public String getUsername() {
-        return this.username;
+        return (String) loginRequest.get("username");
     }
 
     public String getPassword() {
-        return this.password;
+        return (String) loginRequest.get("password");
     }
 
     public void setUsername(String username) {
-        this.username = username;
+        loginRequest.replace("username", username);
     }
 
-    public void setPassword() {
-        this.password = password;
+    public void setPassword(String password) {
+        loginRequest.replace("password", password);
     }
 }

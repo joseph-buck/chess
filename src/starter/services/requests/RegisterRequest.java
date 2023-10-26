@@ -10,13 +10,7 @@ import java.util.Map;
 public class RegisterRequest {
     Map<String, Object> registerRequest = new HashMap<>();
 
-    /**
-     * Constructor - Initializes fields to user defined values.
-     * @param username User defined username.
-     * @param password User defined password.
-     * @param email User defined email.
-     */
-    public RegisterRequest(String username, String password, String email) {
+    public RegisterRequest(Object username, Object password, Object email) {
         registerRequest.put("username", username);
         registerRequest.put("password", password);
         registerRequest.put("email", email);

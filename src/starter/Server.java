@@ -8,9 +8,6 @@ import java.util.*;
 
 
 public class Server {
-    Map<String, User> users;
-    Set<Integer> games;
-
     public static void main(String[] args) {
         new Server().run();
     }
@@ -25,6 +22,7 @@ public class Server {
 
         // Calls methods to receive HTTP inputs and call the correct functions
         Spark.post("/user", this::register);
+        Spark.post("/session", this::login);
         Spark.delete("/db", this::clearApplication);
     }
 
@@ -36,7 +34,12 @@ public class Server {
     private Object clearApplication(Request request, Response response) {
         ClearApplicationHandler clearApplicationHandler
                 = new ClearApplicationHandler(request, response);
+        //TODO: Change the clearApplication() function name to getResponse()
         return clearApplicationHandler.clearApplication();
     }
 
+    private Object login(Request request, Response response) {
+        LoginHandler loginHandler = new LoginHandler(request, response);
+        return loginHandler.getResponse();
+    }
 }

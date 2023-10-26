@@ -26,34 +26,34 @@ public class Register {
         Object password = request.getPassword();
         Object email = request.getEmail();
 
-        String authToken;
+        String authTokenString;
         String message;
         int code;
 
         try {
-            if ((username == null) || (((String)username).compareTo("") == 0)) {
+            if ((username == null) || (((String)username).compareTo("") == 0)
+                    || (password == null) || (((String)password).compareTo("") == 0)) {
                 username = null;
-                authToken = null;
+                authTokenString = null;
                 message = "Error: bad request";
                 code = 400;
             } else if (userDAOObj.readUser((String)username) != null) {
                 username = null;
-                authToken = null;
+                authTokenString = null;
                 message = "Error: already taken";
                 code = 403;
             } else {
-                authToken = userDAOObj.insertUser(new User((String)username,
+                authTokenString = userDAOObj.insertUser(new User((String)username,
                         (String)password, (String)email)).getAuthToken();
                 message = null;
                 code = 200;
             }
-            return new RegisterResponse((String)username, authToken, message, code);
         } catch(DataAccessException ex) {
             username = null;
-            authToken = null;
+            authTokenString = null;
             message = String.format("Error: DataAccessException thrown. \n%s", ex.toString());
             code = 500;
-            return new RegisterResponse((String)username, authToken, message, code);
         }
+        return new RegisterResponse((String) username, authTokenString, message, code);
     }
 }

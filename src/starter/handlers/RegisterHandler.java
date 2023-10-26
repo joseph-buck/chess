@@ -4,44 +4,48 @@ import services.Register;
 import services.requests.RegisterRequest;
 import services.responses.RegisterResponse;
 
-import spark.*;
 import com.google.gson.Gson;
-import java.util.Map;
-import java.util.HashMap;
+import spark.*;
+
+import java.util.*;
 
 
 public class RegisterHandler {
     private Request req;
     private Response res;
 
-    private Map requestBody;
+    private Map<String, Object> reqBody;
 
     private String username;
     private String password;
     private String email;
 
-
     public RegisterHandler(Request req, Response res) {
         this.req = req;
         this.res = res;
-        this.requestBody = new Gson().fromJson(req.body(), Map.class);
+        this.reqBody = new Gson().fromJson(req.body(), Map.class);
     }
 
     public String getResponse() {
-        parseRequestBody(this.req);
+        parseRequestBody();
         Register registerService = new Register();
         RegisterResponse registerResponse = registerService.register(
                 new RegisterRequest(username, password, email));
 
         res.status(registerResponse.getCode());
         return new Gson().toJson(toMap(registerResponse));
-
     }
 
-    private void parseRequestBody(Request req) {
-        this.username = (String) this.requestBody.get("username");
-        this.password = (String) this.requestBody.get("password");
-        this.email = (String) this.requestBody.get("email");
+    private void parseRequestBody() {
+        try {
+            this.username = (String) this.reqBody.get("username");
+            this.password = (String) this.reqBody.get("password");
+            this.email = (String) this.reqBody.get("email");
+        } catch (Exception ex) {
+            this.username = "";
+            this.password = "";
+            this.email = "";
+        }
     }
 
     private Map<String, Object> toMap(RegisterResponse registerResponse) {
