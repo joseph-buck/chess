@@ -10,22 +10,28 @@ import java.util.*;
 public class AuthDAO {
     private static HashSet<AuthToken> tokens = new HashSet<AuthToken>();
 
-    /**
-     * Method for inserting new AuthToken objects into the database
-     * @param newToken The new AuthToken object to be inserted
-     * @throws DataAccessException
-     */
     public void insertToken(AuthToken newToken) throws DataAccessException {
         tokens.add(newToken);
     }
 
-    /**
-     * Method for reading an AuthToken object from the database.
-     * @param username The username associated with the object to be queried.
-     * @return Returns the AuthToken object from the database.
-     * @throws DataAccessException
-     */
-    public ArrayList<AuthToken> readToken(String username) throws DataAccessException {
+    public AuthToken readToken(String authTokenString) throws DataAccessException {
+        //TODO: Change this to take advantage of fast find behavior of sets?
+        for (AuthToken token : tokens) {
+            if (token.getAuthToken().compareTo(authTokenString) == 0) {
+                return token;
+            }
+        }
+        return null;
+    }
+
+    public void removeToken(String authTokenString) throws DataAccessException {
+        AuthToken tokenToRemove = this.readToken(authTokenString);
+        if (tokenToRemove != null) {
+            tokens.remove(tokenToRemove);
+        }
+    }
+
+    public ArrayList<AuthToken> readUserTokens(String username) throws DataAccessException {
         ArrayList<AuthToken> userTokens = new ArrayList<>();
         for (AuthToken token : tokens) {
             if (token.getUsername().compareTo(username) == 0) {
@@ -50,17 +56,6 @@ public class AuthDAO {
     //    }
     //}
 
-    /**
-     * Method for deleting an AuthToken object from the database.
-     * @param username The username associated with the object to be deleted.
-     * @throws DataAccessException
-     */
-    //public void removeToken(String username) throws DataAccessException {
-    //    AuthToken tokenToRemove = this.readToken(username);
-    //    if (tokenToRemove != null) {
-    //        tokens.remove(tokenToRemove);
-    //    }
-    //}//
 
     public HashSet<AuthToken> getTokens() {
         return tokens;

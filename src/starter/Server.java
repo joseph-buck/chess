@@ -21,14 +21,10 @@ public class Server {
                 "/home/joseph/Desktop/semester-2023-fall/cs240/chess/web");
 
         // Calls methods to receive HTTP inputs and call the correct functions
+        Spark.delete("/db", this::clearApplication);
         Spark.post("/user", this::register);
         Spark.post("/session", this::login);
-        Spark.delete("/db", this::clearApplication);
-    }
-
-    private Object register(Request request, Response response) {
-        RegisterHandler registerHandler = new RegisterHandler(request, response);
-        return registerHandler.getResponse();
+        Spark.delete("/session", this::logout);
     }
 
     private Object clearApplication(Request request, Response response) {
@@ -38,8 +34,18 @@ public class Server {
         return clearApplicationHandler.clearApplication();
     }
 
+    private Object register(Request request, Response response) {
+        RegisterHandler registerHandler = new RegisterHandler(request, response);
+        return registerHandler.getResponse();
+    }
+
     private Object login(Request request, Response response) {
         LoginHandler loginHandler = new LoginHandler(request, response);
         return loginHandler.getResponse();
+    }
+
+    private Object logout(Request request, Response response) {
+        LogoutHandler logoutHandler = new LogoutHandler(request, response);
+        return logoutHandler.getResponse();
     }
 }

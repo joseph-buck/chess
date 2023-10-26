@@ -9,8 +9,37 @@ import services.Register;
 import services.requests.RegisterRequest;
 import services.responses.RegisterResponse;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 
 public class RegisterAPITesting {
+    private static final int HTTP_OK = 200;
+
+    @Test
+    public void tempLogoutTest() throws IOException {
+        URL url = new URL("http://localhost:8080/");
+
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+        connection.setReadTimeout(5000);
+        connection.setRequestMethod("GET");
+
+        connection.connect();
+
+        if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+            //InputStream responsebody
+        }
+    }
+
+
+
+
+
+
+
     @Test
     public void simpleAssertionTest() {
         assertEquals(200, 100+100);

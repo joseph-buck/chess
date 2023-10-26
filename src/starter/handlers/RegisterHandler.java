@@ -11,9 +11,7 @@ import java.util.*;
 
 
 public class RegisterHandler {
-    private Request req;
     private Response res;
-
     private Map<String, Object> reqBody;
 
     private String username;
@@ -21,7 +19,6 @@ public class RegisterHandler {
     private String email;
 
     public RegisterHandler(Request req, Response res) {
-        this.req = req;
         this.res = res;
         this.reqBody = new Gson().fromJson(req.body(), Map.class);
     }

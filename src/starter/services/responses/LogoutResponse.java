@@ -5,31 +5,27 @@ package services.responses;
  * LogoutResponse --- Class for storing the data of a logout response.
  */
 public class LogoutResponse {
-    /**
-     * message - Error message.
-     */
     private String message;
+    private int code;
 
-    /**
-     * Default Constructor - Initializes the error message to null.
-     */
-    public LogoutResponse() {
-        this.message = null;
-    }
-
-    /**
-     * Constructor - Stores the supplied error message.
-     * @param message User defined error message.
-     */
-    public LogoutResponse(String message) {
+    public LogoutResponse(String message, int code) {
         this.message = message;
+        this.code = code;
     }
 
     public String getMessage() {
         return this.message;
     }
 
+    public int getCode() {
+       return code;
+    }
+
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
     }
 }
