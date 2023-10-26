@@ -9,7 +9,7 @@ import models.Game;
  * GameDAO --- Class for interacting with Game objects in the database.
  */
 public class GameDAO {
-    public static HashSet<Game> games;
+    public static HashSet<Game> games = new HashSet<Game>();
 
     /**
      * Method for inserting new Game objects into the database.
@@ -17,7 +17,8 @@ public class GameDAO {
      * @throws DataAccessException
      */
     public void insertGame(Game newGame) throws DataAccessException {
-
+        //TODO: Do checks for gameName's presence here?
+        games.add(newGame);
     }
 
     /**
@@ -26,8 +27,24 @@ public class GameDAO {
      * @return The Game object being retrieved.
      * @throws DataAccessException
      */
-    public Game findGame(int gameID) throws DataAccessException {
-        return new Game(gameID, "", "", "", new chess.Game());
+    public Game findGame(Integer gameID) throws DataAccessException {
+        if (gameID != null) {
+            for (Game game : games) {
+                if (game.getGameID() == gameID) {
+                    return game;
+                }
+            }
+        }
+        return null;
+    }
+
+    public Game findGame(String gameName) throws DataAccessException {
+        for (Game game: games) {
+            if (game.getGameName().compareTo(gameName) == 0) {
+                return game;
+            }
+        }
+        return null;
     }
 
     /**
@@ -36,7 +53,7 @@ public class GameDAO {
      * @throws DataAccessException
      */
     public Set<Game> findAll() throws DataAccessException {
-        return new HashSet<Game>();
+        return games;
     }
 
     /**

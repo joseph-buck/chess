@@ -48,7 +48,7 @@ public class Register {
                 message = null;
                 code = 200;
             }
-        } catch(DataAccessException ex) {
+        } catch (DataAccessException ex) {
             username = null;
             authTokenString = null;
             message = String.format("Error: DataAccessException thrown. \n%s", ex.toString());

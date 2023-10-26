@@ -12,12 +12,7 @@ import java.util.*;
  */
 public class Logout {
 
-    public <T> LogoutResponse logout(String reqHeader) {
-        // Get the authToken out of the reqHeader set
-        // Check that the auth token is in the database
-            // If it is, remove it.
-            // If it isn't, 401 unauthorized
-
+    public LogoutResponse logout(String reqHeader) {
         AuthDAO authDAOObj = new AuthDAO();
         String authTokenString;
 

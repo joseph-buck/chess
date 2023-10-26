@@ -1,46 +1,24 @@
 package services.responses;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
+import java.util.*;
 
 
 /**
  * ListGamesResponse --- Class for storing the response to a list games query.
  */
 public class ListGamesResponse {
-    /**
-     * message - Error message.
-     */
+    private List<HashMap<String, Object>> games = new ArrayList<>();
     private String message;
-    /**
-     * games - The list of all games in the database.
-     */
-    private List<Map<String, Object>> games = new ArrayList<>();
+    private int code;
 
-    /**
-     * Default Constructor - Sets error message to null, and obtains the list
-     * of games by calling createGamesList().
-     */
-    public ListGamesResponse() {
-        this.message = null;
-        this.games = createGamesList();
-    }
-
-    /**
-     * Constructor - If an error message is supplied, it is stored in message.
-     * @param message User defined error message.
-     */
-    public ListGamesResponse(String message) {
+    public ListGamesResponse(ArrayList<HashMap<String, Object>> games,
+                             String message, int code) {
+        this.games = games;
         this.message = message;
-        this.games = null;
+        this.code = code;
     }
 
-    private List<Map<String, Object>> createGamesList() {
-        return new ArrayList<Map<String, Object>>();
-    }
-
-    public List<Map<String, Object>> getGames() {
+    public List<HashMap<String, Object>> getGames() {
         return games;
     }
 
@@ -48,8 +26,8 @@ public class ListGamesResponse {
         return this.message;
     }
 
-    public void setGames() {
-        this.games = createGamesList();
+    public int getCode() {
+        return this.code;
     }
 
     public void setMessage(String message) {

@@ -6,8 +6,8 @@ package services.responses;
  * application response.
  */
 public class ClearApplicationResponse {
-    int code;
     private String message;
+    private int code;
 
     public ClearApplicationResponse(String message, int code) {
         this.message = message;
@@ -18,12 +18,12 @@ public class ClearApplicationResponse {
         return this.message;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
     public int getCode() {
         return this.code;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public void setCode(int code) {

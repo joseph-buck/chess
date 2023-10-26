@@ -25,8 +25,6 @@ public class LogoutHandler {
         Logout logoutService = new Logout();
         LogoutResponse logoutResponse = logoutService.logout(reqHeader);
 
-        //TODO: Delete LoginRequest class
-        System.out.println(logoutResponse.getCode());
         res.status(logoutResponse.getCode());
         return new Gson().toJson(toMap(logoutResponse));
     }

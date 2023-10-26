@@ -5,49 +5,26 @@ package services.responses;
  * CreateGameResponse --- Class for storing data about a create game response.
  */
 public class CreateGameResponse {
-    /**
-     * message - Error message.
-     */
+    private Integer gameID;
     private String message;
-    /**
-     * gameID - Unique identifier of the game to create.
-     */
-    private int gameID;
+    private int code;
 
-    /**
-     * Default Constructor - Initializes all fields to default values.
-     */
-    public CreateGameResponse() {
-        this.message = null;
-        this.gameID = -1;
-    }
-
-    /**
-     * Constructor - If an integer is supplied, the error message is set to
-     * null and the provided gameID is stored.
-     * @param gameID
-     */
-    public CreateGameResponse(int gameID) {
-        this.message = null;
+    public CreateGameResponse(Integer gameID, String message, int code) {
         this.gameID = gameID;
-    }
-
-    /**
-     * Constructor - If a string is supplied, the error message is stored and
-     * the gameID is set to a null value.
-     * @param message
-     */
-    public CreateGameResponse(String message) {
         this.message = message;
-        this.gameID = -1;
+        this.code = code;
     }
 
     public String getMessage() {
         return this.message;
     }
 
-    public int getGameID() {
+    public Integer getGameID() {
         return this.gameID;
+    }
+
+    public Integer getCode() {
+        return this.code;
     }
 
     public void setMessage(String message) {
@@ -56,6 +33,10 @@ public class CreateGameResponse {
 
     public void setGameID(int gameID) {
         this.gameID = gameID;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
     }
 
 }
