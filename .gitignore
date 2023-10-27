@@ -27,4 +27,4 @@ bin/
 
 ### Mac OS ###
 .DS_Store
-/src/starter/handlers/HandlerTester.java
+/src/main/handlers/HandlerTester.java
