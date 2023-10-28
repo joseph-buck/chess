@@ -1,6 +1,11 @@
 package dataAccess;
 
 import models.*;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
 import java.util.*;
 
 
@@ -11,6 +16,24 @@ public class AuthDAO {
     // tokens - temporarily using static data member to store AuthTokens. Will
     //          eventually store this data in a relational database.
     private static HashSet<AuthToken> tokens = new HashSet<>();
+
+    public void initAuthTable(Connection conn) throws DataAccessException {
+        String createAuthTokenTable = """
+                    CREATE TABLE IF NOT EXISTS auth_token (
+                        authTokenString CHAR(255),
+                        username VARCHAR(255) NOT NULL,
+                        PRIMARY KEY (authTokenString),
+                        FOREIGN KEY (username) REFERENCES user(username)
+                    )""";
+        try {
+            PreparedStatement createAuthTokenTableStatement
+                    = conn.prepareStatement(createAuthTokenTable);
+            createAuthTokenTableStatement.executeUpdate();
+        } catch (SQLException ex) {
+            throw new DataAccessException(ex.getMessage());
+        }
+    }
+
 
     public void insertToken(AuthToken newToken) throws DataAccessException {
         tokens.add(newToken);

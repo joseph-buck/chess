@@ -1,6 +1,11 @@
 package dataAccess;
 
 import models.*;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
 import java.util.*;
 
 
@@ -11,6 +16,23 @@ public class UserDAO {
     // users - temporarily using static data member to store Users. Will
     //          eventually store this data in a relational database.
     private static HashSet<User> users = new HashSet<>();
+
+    public void initUserTable(Connection conn) throws DataAccessException {
+        String initUserTable = """
+                    CREATE TABLE IF NOT EXISTS user (
+                        username VARCHAR(255) NOT NULL,
+                        password VARCHAR(255) NOT NULL,
+                        email VARCHAR(255) NOT NULL,
+                        PRIMARY KEY (username)
+                    )""";
+        try {
+            PreparedStatement initUserTableStatement
+                    = conn.prepareStatement(initUserTable);
+            initUserTableStatement.executeUpdate();
+        } catch (SQLException ex) {
+            throw new DataAccessException(ex.getMessage());
+        }
+    }
 
     public AuthToken insertUser(User newUser) throws DataAccessException {
         AuthDAO authDAOObj = new AuthDAO();

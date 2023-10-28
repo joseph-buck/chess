@@ -1,3 +1,5 @@
+import dataAccess.DataAccessException;
+import dataAccess.Database;
 import handlers.*;
 
 import spark.*;
@@ -9,6 +11,9 @@ public class Server {
     }
 
     private void run() {
+        // Set up the database
+        new Database().initDatabase();
+
         // Specify the port to listen on
         Spark.port(8080);
 

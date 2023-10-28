@@ -1,8 +1,12 @@
 package dataAccess;
 
-import java.util.Set;
-import java.util.HashSet;
 import models.Game;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+import java.util.*;
 
 
 /**
@@ -12,6 +16,27 @@ public class GameDAO {
     // games - temporarily using static data member to store Games. Will
     //          eventually store this data in a relational database.
     public static HashSet<Game> games = new HashSet<>();
+
+    public void initGameTable(Connection conn) throws DataAccessException {
+        String createGameTable = """
+                    CREATE TABLE IF NOT EXISTS game (
+                    gameID SMALLINT AUTO_INCREMENT NOT NULL,
+                    whiteUsername VARCHAR(255),
+                    blackUsername VARCHAR(255),
+                    gameName VARCHAR(255) NOT NULL,
+                    game TEXT,
+                    PRIMARY KEY (gameID),
+                    FOREIGN KEY (whiteUsername) REFERENCES user(username),
+                    FOREIGN KEY (blackUsername) REFERENCES user(username)
+                    )""";
+        try {
+            PreparedStatement createGameTableStatement
+                    = conn.prepareStatement(createGameTable);
+            createGameTableStatement.executeUpdate();
+        } catch (SQLException ex) {
+            throw new DataAccessException(ex.getMessage());
+        }
+    }
 
     public void insertGame(Game newGame) throws DataAccessException {
         games.add(newGame);
