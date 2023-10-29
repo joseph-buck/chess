@@ -26,9 +26,11 @@ public class AuthDAO {
                         FOREIGN KEY (username) REFERENCES user(username)
                     )""";
         try {
+            System.out.println("Creating authTable");
             PreparedStatement createAuthTokenTableStatement
                     = conn.prepareStatement(createAuthTokenTable);
             createAuthTokenTableStatement.executeUpdate();
+            System.out.println("Created authTable");
         } catch (SQLException ex) {
             throw new DataAccessException(ex.getMessage());
         }

@@ -82,7 +82,8 @@ public class Database {
             conn.setCatalog("chess");
 
             // Create tables
-            userDAOObj.initUserTable(conn);
+            //TODO: These don't need to take in a connection as input
+            userDAOObj.initUserTable();
             authDAOObj.initAuthTable(conn);
             gameDAOObj.initGameTable(conn);
 
