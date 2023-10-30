@@ -26,6 +26,11 @@ public class AuthToken {
         }
     }
 
+    public AuthToken(Object authTokenString, Object username) {
+        this.authToken = (String) authTokenString;
+        this.username = (String) username;
+    }
+
     public String getAuthToken() {
         return this.authToken;
     }

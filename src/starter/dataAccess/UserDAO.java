@@ -18,7 +18,7 @@ public class UserDAO {
     private Database database = new Database();
 
     private final String initUserTable = """
-            CREATE TABLE IF NOT EXISTS user(
+            CREATE TABLE IF NOT EXISTS user (
                 username VARCHAR(255) NOT NULL,
                 password VARCHAR(255) NOT NULL,
                 email VARCHAR(255) NOT NULL,
