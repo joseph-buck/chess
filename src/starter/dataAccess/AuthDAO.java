@@ -84,7 +84,7 @@ public class AuthDAO {
     //}
 
     public AuthToken readToken(String authTokenString) throws DataAccessException {
-        //AuthToken resultToken;
+        AuthToken resultToken;
         //try (ResultSet result = executeStatement(getAuthRow,
         //        new ArrayList<>(Arrays.asList(authTokenString)))) {
         //    if (result == null) {
@@ -122,8 +122,17 @@ public class AuthDAO {
     }
 
     public HashSet<AuthToken> getTokens() throws DataAccessException {
-        //try (ResultSet ignore = executeStatement(getAllAuthRows,
+        //HashSet<AuthToken> tokenList = new HashSet<>();
+        //try (ResultSet result = executeStatement(getAllAuthRows,
         //        new ArrayList<>())) {
+        //    while (result.next()) {
+        //        String resultAuthTokenString
+        //                = result.getString("authTokenString");
+        //        String resultUsername = result.getString("username");
+        //        tokenList.add(new AuthToken(resultAuthTokenString,
+        //                resultUsername));
+        //    }
+        //    return tokenList;
         //} catch (SQLException ex) {
         //    throw new DataAccessException(ex.getMessage());
         //}

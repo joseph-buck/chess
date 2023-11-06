@@ -14,7 +14,7 @@ import java.util.*;
  * UserDAO --- Class for interacting with User objects in the database.
  */
 public class UserDAO {
-    //private static HashSet<User> users = new HashSet<>();
+    private static HashSet<User> users = new HashSet<>();
     private Database database = new Database();
 
     private final String initUserTable = """
@@ -46,28 +46,16 @@ public class UserDAO {
         }
     }
 
-    public AuthToken insertUser(User newUser) throws DataAccessException {
-        AuthDAO authDAOObj = new AuthDAO();
-        AuthToken newToken = new AuthToken(newUser.getUsername());
-        if (this.readUser(newUser.getUsername()) == null) {
-            try (ResultSet ignored = executeStatement(insertUserRow,
-                    new ArrayList<>(Arrays.asList(newUser.getUsername(),
-                            newUser.getPassword(), newUser.getEmail())))) {
-            } catch (SQLException ex) {
-                throw new DataAccessException(ex.getMessage());
-            }
-            authDAOObj.insertToken(newToken);
-            return newToken;
-        } else {
-            return null;
-        }
-    }
-
     //public AuthToken insertUser(User newUser) throws DataAccessException {
     //    AuthDAO authDAOObj = new AuthDAO();
     //    AuthToken newToken = new AuthToken(newUser.getUsername());
     //    if (this.readUser(newUser.getUsername()) == null) {
-    //        users.add(newUser);
+    //        try (ResultSet ignored = executeStatement(insertUserRow,
+    //                new ArrayList<>(Arrays.asList(newUser.getUsername(),
+    //                        newUser.getPassword(), newUser.getEmail())))) {
+    //        } catch (SQLException ex) {
+    //            throw new DataAccessException(ex.getMessage());
+    //        }
     //        authDAOObj.insertToken(newToken);
     //        return newToken;
     //    } else {
@@ -75,67 +63,79 @@ public class UserDAO {
     //    }
     //}
 
-    public User readUser(String username) throws DataAccessException {
-        User resultUser;
-        try (ResultSet result = executeStatement(
-                getUserRow, new ArrayList<>(Arrays.asList(username)))) {
-            if (result == null) {
-                resultUser = null;
-            } else if (result.next()) {
-                String resultUsername = result.getString("username");
-                String resultPassword = result.getString("password");
-                String resultEmail = result.getString("email");
-                resultUser = new User(resultUsername, resultPassword, resultEmail);
-            } else {
-                resultUser = null;
-            }
-            return resultUser;
-        } catch (SQLException ex) {
-            throw new DataAccessException(ex.getMessage());
+    public AuthToken insertUser(User newUser) throws DataAccessException {
+        AuthDAO authDAOObj = new AuthDAO();
+        AuthToken newToken = new AuthToken(newUser.getUsername());
+        if (this.readUser(newUser.getUsername()) == null) {
+            users.add(newUser);
+            authDAOObj.insertToken(newToken);
+            return newToken;
+        } else {
+            return null;
         }
     }
 
     //public User readUser(String username) throws DataAccessException {
-    //    for (User user : users) {
-    //        if (user.getUsername().compareTo(username) == 0) {
-    //            return user;
+    //    User resultUser;
+    //    try (ResultSet result = executeStatement(
+    //            getUserRow, new ArrayList<>(Arrays.asList(username)))) {
+    //        if (result == null) {
+    //            resultUser = null;
+    //        } else if (result.next()) {
+    //            String resultUsername = result.getString("username");
+    //            String resultPassword = result.getString("password");
+    //            String resultEmail = result.getString("email");
+    //            resultUser = new User(resultUsername, resultPassword, resultEmail);
+    //        } else {
+    //            resultUser = null;
     //        }
+    //        return resultUser;
+    //    } catch (SQLException ex) {
+    //        throw new DataAccessException(ex.getMessage());
     //    }
-    //    return null;
     //}
 
-    public HashSet<User> getUsers() throws DataAccessException {
-        //TODO: Merge this code and the code for readUser
-        HashSet<User> userList = new HashSet<>();
-        try (ResultSet result = executeStatement(getAllUserRows, new ArrayList<>())) {
-            while (result.next()) {
-                String resultUsername = result.getString("username");
-                String resultPassword = result.getString("password");
-                String resultEmail = result.getString("email");
-                userList.add(new User(resultUsername,
-                        resultPassword, resultEmail));
+    public User readUser(String username) throws DataAccessException {
+        for (User user : users) {
+            if (user.getUsername().compareTo(username) == 0) {
+                return user;
             }
-        } catch (SQLException ex) {
-            throw new DataAccessException(ex.getMessage());
         }
-        return userList;
+        return null;
     }
 
     //public HashSet<User> getUsers() throws DataAccessException {
-    //    return users;
+    //    //TODO: Merge this code and the code for readUser
+    //    HashSet<User> userList = new HashSet<>();
+    //    try (ResultSet result = executeStatement(getAllUserRows, new ArrayList<>())) {
+    //        while (result.next()) {
+    //            String resultUsername = result.getString("username");
+    //            String resultPassword = result.getString("password");
+    //            String resultEmail = result.getString("email");
+    //            userList.add(new User(resultUsername,
+    //                    resultPassword, resultEmail));
+    //        }
+    //    } catch (SQLException ex) {
+    //        throw new DataAccessException(ex.getMessage());
+    //    }
+    //    return userList;
     //}
 
-    public void removeAllUsers() throws DataAccessException {
-        try (ResultSet result = executeStatement(clearUserTable, new ArrayList<>())) {
-
-        } catch (SQLException ex) {
-            throw new DataAccessException(ex.getMessage());
-        }
+    public HashSet<User> getUsers() throws DataAccessException {
+        return users;
     }
 
     //public void removeAllUsers() throws DataAccessException {
-    //    users = new HashSet<>();
+    //    try (ResultSet result = executeStatement(clearUserTable, new ArrayList<>())) {
+//
+    //    } catch (SQLException ex) {
+    //        throw new DataAccessException(ex.getMessage());
+    //    }
     //}
+
+    public void removeAllUsers() throws DataAccessException {
+        users = new HashSet<>();
+    }
 
     private ResultSet executeStatement(String sqlStatement, List<Object> params)
             throws DataAccessException {
