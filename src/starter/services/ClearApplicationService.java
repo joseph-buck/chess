@@ -17,9 +17,9 @@ public class ClearApplicationService {
         int code;
 
         try {
-            userDAOObj.removeAllUsers();
             authDAOObj.removeAllTokens();
             gameDAOObj.removeAllGames();
+            userDAOObj.removeAllUsers();
 
             message = null;
             code = 200;

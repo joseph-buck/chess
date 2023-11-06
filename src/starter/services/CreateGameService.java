@@ -35,9 +35,10 @@ public class CreateGameService {
                 message = "Error: unauthorized";
                 code = 401;
             } else {
-                gameID = this.randInt();
-                gameDAOObj.insertGame(new Game(gameID, null,
+                //gameID = this.randInt();
+                gameDAOObj.insertGame(new Game(-1, null,
                         null, gameName, new chess.Game()));
+                gameID = gameDAOObj.findGame(gameName).getGameID();
                 message = null;
                 code = 200;
             }
@@ -50,6 +51,7 @@ public class CreateGameService {
     }
 
     // randInt - A helper function to create a randomly generated, unique gameID
+    //TODO: Shouldn't need this function once database is implemented. This will be done internally.
     private int randInt() throws DataAccessException {
         int gameID;
         GameDAO gameDAOObj = new GameDAO();

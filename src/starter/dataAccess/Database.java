@@ -84,9 +84,8 @@ public class Database {
             // Create tables
             //TODO: These don't need to take in a connection as input
             userDAOObj.initUserTable();
-            authDAOObj.initAuthTable(conn);
-            gameDAOObj.initGameTable(conn);
-
+            authDAOObj.initAuthTable();
+            gameDAOObj.initGameTable();
         } catch (SQLException | DataAccessException ex) {
             System.out.println(String.format("Exception occurred: %s", ex));
         }

@@ -9,14 +9,11 @@ import java.sql.SQLException;
 
 import java.util.*;
 
-
+//TODO: CONNECTIONS ARE NOT BEING CLOSED SOMEWHERE. GO THROUGH AND CLOSE THEM EVERYWHERE.
 /**
  * AuthDAO --- Class for interacting with AuthToken objects in the database.
  */
 public class AuthDAO {
-    // tokens - temporarily using static data member to store AuthTokens. Will
-    //          eventually store this data in a relational database.
-    private static HashSet<AuthToken> tokens = new HashSet<>();
     private Database database = new Database();
 
     private final String initAuthTable = """
@@ -31,7 +28,7 @@ public class AuthDAO {
             VALUES (?, ?);
             """;
     private final String getAuthRow = """
-            SELECT * FROM username WHERE username = ?;
+            SELECT * FROM auth_token WHERE authTokenString = ?;
             """;
     private final String removeAuthRow = """
             DELETE FROM auth_token WHERE authTokenString = ?;
@@ -43,112 +40,66 @@ public class AuthDAO {
             DELETE FROM auth_token;
             """;
 
-    public void initAuthTable(Connection conn) throws DataAccessException {
-        try (ResultSet ignored = executeStatement(
-                initAuthTable, new ArrayList<>())) {
-        } catch (SQLException ex) {
-            throw new DataAccessException(ex.getMessage());
-        }
-
-    //public void initAuthTable(Connection conn) throws DataAccessException {
-        //String createAuthTokenTable = """
-        //            CREATE TABLE IF NOT EXISTS auth_token (
-        //                authTokenString CHAR(255),
-        //                username VARCHAR(255) NOT NULL,
-        //                PRIMARY KEY (authTokenString),
-        //                FOREIGN KEY (username) REFERENCES user(username)
-        //            )""";
-        //try {
-        //    System.out.println("Creating authTable");
-        //    PreparedStatement createAuthTokenTableStatement
-        //            = conn.prepareStatement(createAuthTokenTable);
-        //    createAuthTokenTableStatement.executeUpdate();
-        //    System.out.println("Created authTable");
-        //} catch (SQLException ex) {
-        //    throw new DataAccessException(ex.getMessage());
-        //}
+    public void initAuthTable() throws DataAccessException {
+        CloseableTuple tupleResult = executeStatement(initAuthTable, new ArrayList<>());
+        tupleResult.close();
     }
 
     public void insertToken(AuthToken newToken) throws DataAccessException {
-        //try (ResultSet ignored = executeStatement(insertAuthRow,
-        //        new ArrayList<>(Arrays.asList(newToken.getAuthToken(),
-        //                newToken.getUsername())))) {
-        //} catch (SQLException ex) {
-        //    throw new DataAccessException(ex.getMessage());
-        //}
-        tokens.add(newToken);
+        CloseableTuple tupleResult = executeStatement(insertAuthRow,
+                new ArrayList<>(Arrays.asList(newToken.getAuthToken(),
+                        newToken.getUsername())));
+        tupleResult.close();
     }
-
-    //public void insertToken(AuthToken newToken) throws DataAccessException {
-    //    tokens.add(newToken);
-    //}
 
     public AuthToken readToken(String authTokenString) throws DataAccessException {
         AuthToken resultToken;
-        //try (ResultSet result = executeStatement(getAuthRow,
-        //        new ArrayList<>(Arrays.asList(authTokenString)))) {
-        //    if (result == null) {
-        //        resultToken = null;
-        //    } else if (result.next()) {
-        //        String resultAuthTokenString = result.getString("authTokenString");
-        //        String resultUsername = result.getString("username");
-        //        resultToken = new AuthToken(resultAuthTokenString, resultUsername);
-        //    } else {
-        //        resultToken = null;
-        //    }
-        //    return resultToken;
-        //} catch (SQLException ex) {
-        //    throw new DataAccessException(ex.getMessage());
-        //}
-        for (AuthToken token : tokens) {
-            if (token.getAuthToken().compareTo(authTokenString) == 0) {
-                return token;
+        try (CloseableTuple tupleResult = executeStatement(getAuthRow,
+                new ArrayList<>(Arrays.asList(authTokenString)))) { // Using toValidString here
+            if (tupleResult.getResult() == null) {
+                resultToken = null;
+            } else if (tupleResult.getResult().next()) {
+                String resultAuthTokenString = tupleResult.getResult().getString("authTokenString");
+                String resultUsername = tupleResult.getResult().getString("username");
+                resultToken = new AuthToken(resultAuthTokenString, resultUsername);
+            } else {
+                resultToken = null;
             }
+            return resultToken;
+        } catch (SQLException ex) {
+            throw new DataAccessException(ex.getMessage());
         }
-        return null;
     }
 
     public void removeToken(String authTokenString) throws DataAccessException {
-        //try (ResultSet result = executeStatement(removeAuthRow,
-        //        new ArrayList<>(Arrays.asList(authTokenString)))) {
-        //} catch (SQLException ex) {
-        //    throw new DataAccessException(ex.getMessage());
-        //}
-
-        AuthToken tokenToRemove = this.readToken(authTokenString);
-        if (tokenToRemove != null) {
-            tokens.remove(tokenToRemove);
-        }
+        CloseableTuple tupleResult = executeStatement(removeAuthRow,
+                new ArrayList<>(Arrays.asList(authTokenString)));
+        tupleResult.close();
     }
 
     public HashSet<AuthToken> getTokens() throws DataAccessException {
-        //HashSet<AuthToken> tokenList = new HashSet<>();
-        //try (ResultSet result = executeStatement(getAllAuthRows,
-        //        new ArrayList<>())) {
-        //    while (result.next()) {
-        //        String resultAuthTokenString
-        //                = result.getString("authTokenString");
-        //        String resultUsername = result.getString("username");
-        //        tokenList.add(new AuthToken(resultAuthTokenString,
-        //                resultUsername));
-        //    }
-        //    return tokenList;
-        //} catch (SQLException ex) {
-        //    throw new DataAccessException(ex.getMessage());
-        //}
-        return tokens;
+        HashSet<AuthToken> tokenList = new HashSet<>();
+        try (CloseableTuple tupleResult = executeStatement(getAllAuthRows,
+                new ArrayList<>())) {
+            while (tupleResult.getResult().next()) {
+                String resultAuthTokenString
+                        = tupleResult.getResult().getString("authTokenString");
+                String resultUsername = tupleResult.getResult().getString("username");
+                tokenList.add(new AuthToken(resultAuthTokenString,
+                        resultUsername));
+            }
+            return tokenList;
+        } catch (SQLException ex) {
+            throw new DataAccessException(ex.getMessage());
+        }
     }
 
     public void removeAllTokens() throws DataAccessException {
-        //try (ResultSet ignored = executeStatement(
-        //        clearAuthTable, new ArrayList<>())) {
-        //} catch (SQLException ex) {
-        //    throw new DataAccessException(ex.getMessage());
-        //}
-        tokens = new HashSet<>();
+        CloseableTuple tupleResult = executeStatement(clearAuthTable, new ArrayList<>());
+        tupleResult.close();
     }
 
-    private ResultSet executeStatement(String sqlStatement, List<Object> params)
+    private CloseableTuple executeStatement(String sqlStatement, List<Object> params)
             throws DataAccessException {
         //TODO: Rollback transactions?
         /**
@@ -159,8 +110,8 @@ public class AuthDAO {
          * If the statement was a query, a ResultSet is returned. If it was
          * not a query, then null is returned.
          */
-        ResultSet result;
         try  {
+            ResultSet result;
             Connection conn = database.getConnection();
             PreparedStatement preparedStatement
                     = conn.prepareStatement(sqlStatement);
@@ -170,9 +121,8 @@ public class AuthDAO {
                 iter += 1;
             }
             preparedStatement.execute();
-            //TODO: May need to use the isQuery with an if statement for other functionality
             result = preparedStatement.getResultSet();
-            return result;
+            return new CloseableTuple(result, conn);
         } catch (SQLException ex) {
             throw new DataAccessException(ex.getMessage());
         }

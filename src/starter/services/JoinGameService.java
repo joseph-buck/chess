@@ -50,6 +50,8 @@ public class JoinGameService {
                 } else if (playerColor.compareTo("BLACK") == 0) {
                     game.setBlackUsername(username);
                 }
+                gameDAOObj.removeGame(game.getGameID());
+                gameDAOObj.insertGame(game);
                 message = null;
                 code = 200;
             }

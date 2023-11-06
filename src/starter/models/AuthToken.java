@@ -18,12 +18,13 @@ public class AuthToken {
         this.authToken = UUID.randomUUID().toString();
         this.username = (String) username;
 
-        try {
-            authDAO.insertToken(this);
-        } catch (DataAccessException ex) {
-            this.authToken = null;
-            this.username = null;
-        }
+        // We are not supposed to access DAO objects from model classes.
+        //try {
+        //    authDAO.insertToken(this);
+        //} catch (DataAccessException ex) {
+        //    this.authToken = null;
+        //    this.username = null;
+        //}
     }
 
     public AuthToken(Object authTokenString, Object username) {

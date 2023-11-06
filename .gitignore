@@ -1,3 +1,8 @@
+printdb
+sqlPrintdb.sql
+remdb
+sqlRemdb.sql
+
 ### IntelliJ IDEA ###
 out/
 !**/src/main/**/out/

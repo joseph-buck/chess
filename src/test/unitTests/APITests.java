@@ -11,7 +11,7 @@ import models.*;
 import chess.ChessGame;
 
 
-public class testAPIs {
+public class APITests {
     private static String username = "John123";
     private static String password = "connect";
     private static String email = "john123@gmail.com";
