@@ -3,9 +3,12 @@ package unitTests;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import requests.CreateGameRequest;
+import requests.JoinGameRequest;
+import requests.LoginRequest;
+import requests.RegisterRequest;
+import responses.*;
 import services.*;
-import services.requests.*;
-import services.responses.*;
 import dataAccess.*;
 import models.*;
 import chess.ChessGame;

@@ -1,8 +1,8 @@
 package services;
 
 import models.*;
-import services.requests.*;
-import services.responses.*;
+import requests.JoinGameRequest;
+import responses.JoinGameResponse;
 import dataAccess.*;
 
 

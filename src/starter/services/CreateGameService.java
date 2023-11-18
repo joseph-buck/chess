@@ -1,8 +1,8 @@
 package services;
 
 import models.Game;
-import services.requests.*;
-import services.responses.*;
+import requests.CreateGameRequest;
+import responses.CreateGameResponse;
 import dataAccess.*;
 
 import java.util.Random;

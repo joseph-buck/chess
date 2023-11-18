@@ -1,4 +1,4 @@
-package chess.pieces;
+package chess;
 
 import chess.*;
 import static chess.ChessGame.TeamColor.BLACK;

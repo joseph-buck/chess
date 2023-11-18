@@ -1,6 +1,6 @@
 package services;
 
-import services.responses.*;
+import responses.ClearApplicationResponse;
 import dataAccess.*;
 
 

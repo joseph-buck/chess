@@ -1,4 +1,4 @@
-package services.responses;
+package responses;
 
 import java.util.HashMap;
 import java.util.Map;

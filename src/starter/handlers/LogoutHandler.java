@@ -1,7 +1,7 @@
 package handlers;
 
 import services.LogoutService;
-import services.responses.LogoutResponse;
+import responses.LogoutResponse;
 
 import com.google.gson.Gson;
 import spark.*;

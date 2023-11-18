@@ -1,8 +1,8 @@
 package services;
 
 import models.*;
-import services.requests.*;
-import services.responses.*;
+import requests.LoginRequest;
+import responses.LoginResponse;
 import dataAccess.*;
 
 
