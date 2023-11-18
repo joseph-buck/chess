@@ -45,11 +45,15 @@ public class AuthDAO {
         tupleResult.close();
     }
 
-    public void insertToken(AuthToken newToken) throws DataAccessException {
-        CloseableTuple tupleResult = executeStatement(insertAuthRow,
-                new ArrayList<>(Arrays.asList(newToken.getAuthToken(),
-                        newToken.getUsername())));
-        tupleResult.close();
+    public boolean insertToken(AuthToken newToken) throws DataAccessException {
+        if (readToken(newToken.getAuthToken()) == null) {
+            CloseableTuple tupleResult = executeStatement(insertAuthRow,
+                    new ArrayList<>(Arrays.asList(newToken.getAuthToken(),
+                            newToken.getUsername())));
+            tupleResult.close();
+            return true;
+        }
+        return false;
     }
 
     public AuthToken readToken(String authTokenString) throws DataAccessException {
@@ -71,10 +75,14 @@ public class AuthDAO {
         }
     }
 
-    public void removeToken(String authTokenString) throws DataAccessException {
-        CloseableTuple tupleResult = executeStatement(removeAuthRow,
-                new ArrayList<>(Arrays.asList(authTokenString)));
-        tupleResult.close();
+    public boolean removeToken(String authTokenString) throws DataAccessException {
+        if (readToken(authTokenString) != null) {
+            CloseableTuple tupleResult = executeStatement(removeAuthRow,
+                    new ArrayList<>(Arrays.asList(authTokenString)));
+            tupleResult.close();
+            return true;
+        }
+        return false;
     }
 
     public HashSet<AuthToken> getTokens() throws DataAccessException {

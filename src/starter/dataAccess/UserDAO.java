@@ -18,7 +18,7 @@ public class UserDAO {
 
     private final String initUserTable = """
             CREATE TABLE IF NOT EXISTS user (
-                username VARCHAR(255) NOT NULL,
+                username VARCHAR(255) NOT NULL UNIQUE,
                 password VARCHAR(255) NOT NULL,
                 email VARCHAR(255) NOT NULL,
                 PRIMARY KEY (username)
@@ -43,6 +43,9 @@ public class UserDAO {
     }
 
     public AuthToken insertUser(User newUser) throws DataAccessException {
+        if (newUser == null) {
+            return null;
+        }
         AuthDAO authDAOObj = new AuthDAO();
         AuthToken newToken = new AuthToken(newUser.getUsername());
         if (this.readUser(newUser.getUsername()) == null) {

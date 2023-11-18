@@ -28,10 +28,9 @@ public class Database {
 
     // FIXME: Change these fields, if necessary, to match your database configuration
     public static final String DB_NAME = "chess";
-    private static final String DB_USERNAME = "root";
-    private static final String DB_PASSWORD = "MyPassword";
-
-    private static final String CONNECTION_URL = "jdbc:mysql://localhost:3306";
+    public static final String DB_USERNAME = "root";
+    public static final String DB_PASSWORD = "MyPassword";
+    public static final String CONNECTION_URL = "jdbc:mysql://localhost:3306";
 
     private final LinkedList<Connection> connections = new LinkedList<>();
 
@@ -64,31 +63,6 @@ public class Database {
      */
     synchronized public void returnConnection(Connection connection) {
         connections.add(connection);
-    }
-
-    public void initDatabase() {
-        UserDAO userDAOObj = new UserDAO();
-        AuthDAO authDAOObj = new AuthDAO();
-        GameDAO gameDAOObj = new GameDAO();
-
-        try (Connection conn = DriverManager.getConnection(
-                CONNECTION_URL, DB_USERNAME, DB_PASSWORD)) {
-            //TODO: Specify auto increment variables and null values
-
-            // Create the  database
-            PreparedStatement createDbStatement = conn.prepareStatement(
-                    "CREATE DATABASE IF NOT EXISTS chess");
-            createDbStatement.executeUpdate();
-            conn.setCatalog("chess");
-
-            // Create tables
-            //TODO: These don't need to take in a connection as input
-            userDAOObj.initUserTable();
-            authDAOObj.initAuthTable();
-            gameDAOObj.initGameTable();
-        } catch (SQLException | DataAccessException ex) {
-            System.out.println(String.format("Exception occurred: %s", ex));
-        }
     }
 }
 

@@ -54,15 +54,23 @@ public class GameDAO {
         tupleResult.close();
     }
 
-    public void insertGame(Game newGame) throws DataAccessException {
+    public boolean insertGame(Game newGame) throws DataAccessException {
         Integer gameID = newGame.getGameID() < 0 ? null : newGame.getGameID();
-        executeStatement(insertGameRow, new ArrayList<>(Arrays.asList(gameID,
-                newGame.getWhiteUsername(), newGame.getBlackUsername(), newGame.getGameName(),
-                new Gson().toJson(newGame.getChessGame()))));
+        if (findGame(gameID) == null) {
+            executeStatement(insertGameRow, new ArrayList<>(Arrays.asList(gameID,
+                    newGame.getWhiteUsername(), newGame.getBlackUsername(), newGame.getGameName(),
+                    new Gson().toJson(newGame.getChessGame()))));
+            return true;
+        }
+        return false;
     }
 
-    public void removeGame(int gameID) throws DataAccessException {
-        executeStatement(removeGameRow, new ArrayList<>(Arrays.asList(gameID)));
+    public boolean removeGame(int gameID) throws DataAccessException {
+        if (findGame(gameID) != null) {
+            executeStatement(removeGameRow, new ArrayList<>(Arrays.asList(gameID)));
+            return true;
+        }
+        return false;
     }
 
     public Game findGame(Integer gameID) throws DataAccessException {

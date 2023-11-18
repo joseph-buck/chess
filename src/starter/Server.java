@@ -1,8 +1,12 @@
-import dataAccess.DataAccessException;
-import dataAccess.Database;
+import dataAccess.*;
 import handlers.*;
 
 import spark.*;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 
 public class Server {
@@ -12,7 +16,7 @@ public class Server {
 
     private void run() {
         // Set up the database
-        new Database().initDatabase();
+        initDatabase();
 
         // Specify the port to listen on
         Spark.port(8080);
@@ -66,5 +70,33 @@ public class Server {
     private Object joinGame(Request request, Response response) {
         JoinGameHandler joinGameHandler = new JoinGameHandler(request, response);
         return joinGameHandler.getResponse();
+    }
+
+    public void initDatabase() {
+        Database db = new Database();
+        UserDAO userDAOObj = new UserDAO();
+        AuthDAO authDAOObj = new AuthDAO();
+        GameDAO gameDAOObj = new GameDAO();
+
+        try (Connection conn = DriverManager.getConnection(
+                db.CONNECTION_URL, db.DB_USERNAME, db.DB_PASSWORD)) {
+
+            // Create the  database
+            PreparedStatement createDbStatement = conn.prepareStatement(
+                    "CREATE DATABASE IF NOT EXISTS chess");
+            createDbStatement.executeUpdate();
+            conn.setCatalog("chess");
+
+            // Create tables
+            userDAOObj.initUserTable();
+            authDAOObj.initAuthTable();
+            gameDAOObj.initGameTable();
+
+            // Close
+            createDbStatement.close();
+        } catch (SQLException | DataAccessException ex) {
+            System.out.println("Database could not be initialized: ");
+            System.out.println(ex.getMessage());
+        }
     }
 }
