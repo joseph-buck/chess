@@ -55,6 +55,7 @@ public class JoinGameHandler {
     private HashMap<String, Object> toMap(JoinGameResponse joinGameResponse) {
         HashMap<String, Object> newMap = new HashMap<>();
         newMap.put("message", joinGameResponse.getMessage());
+        newMap.put("code", joinGameResponse.getCode());
         return newMap;
     }
 }

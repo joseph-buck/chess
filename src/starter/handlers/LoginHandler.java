@@ -52,6 +52,7 @@ public class LoginHandler {
         newMap.put("username", loginResponse.getUsername());
         newMap.put("authToken", loginResponse.getAuthToken());
         newMap.put("message", loginResponse.getMessage());
+        newMap.put("code", loginResponse.getCode());
         return newMap;
     }
 }

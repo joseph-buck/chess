@@ -33,6 +33,7 @@ public class ListGamesHandler {
         Map<String, Object> newMap = new HashMap<>();
         newMap.put("games", listGamesResponse.getGames());
         newMap.put("message", listGamesResponse.getMessage());
+        newMap.put("code", listGamesResponse.getCode());
         return newMap;
     }
 }

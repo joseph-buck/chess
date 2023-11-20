@@ -50,6 +50,7 @@ public class CreateGameHandler {
         Map<String, Object> newMap = new HashMap<>();
         newMap.put("gameID", createGameResponse.getGameID());
         newMap.put("message", createGameResponse.getMessage());
+        newMap.put("code", createGameResponse.getCode());
         return newMap;
     }
 }

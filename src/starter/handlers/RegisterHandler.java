@@ -55,6 +55,7 @@ public class RegisterHandler {
         newMap.put("username", registerResponse.getUsername());
         newMap.put("authToken", registerResponse.getAuthToken());
         newMap.put("message", registerResponse.getMessage());
+        newMap.put("code", registerResponse.getCode());
         return newMap;
     }
 }

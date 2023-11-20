@@ -33,6 +33,7 @@ public class ClearApplicationHandler {
             ClearApplicationResponse clearApplicationResponse) {
         Map<String, Object> newMap = new HashMap<>();
         newMap.put("message", clearApplicationResponse.getMessage());
+        newMap.put("code", clearApplicationResponse.getCode());
         return newMap;
     }
 }

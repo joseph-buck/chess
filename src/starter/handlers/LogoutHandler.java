@@ -31,6 +31,7 @@ public class LogoutHandler {
     private Map<String, Object> toMap(LogoutResponse logoutResponse) {
         Map<String, Object> newMap = new HashMap<>();
         newMap.put("message", logoutResponse.getMessage());
+        newMap.put("code", logoutResponse.getCode());
         return newMap;
     }
 }
