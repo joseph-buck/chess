@@ -7,7 +7,7 @@ import java.util.Map;
 /**
  * RegisterRequest -- Class for storing register request data.
  */
-public class RegisterRequest {
+public class RegisterRequest extends Request {
     Map<String, Object> registerRequest = new HashMap<>();
 
     public RegisterRequest(Object username, Object password, Object email) {
@@ -28,4 +28,7 @@ public class RegisterRequest {
         return registerRequest.get("email");
     }
 
+    public Map getMap() {
+        return registerRequest;
+    }
 }

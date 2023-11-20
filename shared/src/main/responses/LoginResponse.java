@@ -7,7 +7,7 @@ import java.util.Map;
 /**
  * LoginResponse --- Class for storing the data of a login response
  */
-public class LoginResponse {
+public class LoginResponse extends Response {
     private Map<String, Object> loginResponse = new HashMap<>();
 
     public LoginResponse(String username, String authToken,

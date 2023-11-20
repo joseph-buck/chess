@@ -15,12 +15,12 @@ public class CreateGameResponse {
         this.code = code;
     }
 
-    public String getMessage() {
-        return this.message;
-    }
-
     public Integer getGameID() {
         return this.gameID;
+    }
+
+    public String getMessage() {
+        return this.message;
     }
 
     public Integer getCode() {

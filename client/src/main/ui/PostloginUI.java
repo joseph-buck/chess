@@ -1,12 +1,18 @@
 package ui;
 
-import responses.LoginResponse;
-import java.util.Scanner;
+import requests.CreateGameRequest;
+import requests.JoinGameRequest;
+import responses.*;
+import serverfacade.ServerFacade;
+
+import java.util.*;
 
 
 public class PostloginUI {
+    private ServerFacade serverFacade;
     private int returnStatus = 1;
-    private LoginResponse loginResponse;
+    private Response loginResponse;
+    private List<HashMap<String, Object>> games;
 
     private static String welcomeMessage = "Logged in as ";
     private static String farewellMessage = "Thanks for playing!";
@@ -21,7 +27,9 @@ public class PostloginUI {
               help - with possible commands
             """;
 
-    //TODO: Make sure that when quit is called, you logout first.
+    public PostloginUI() {
+        serverFacade = new ServerFacade();
+    }
 
     public int run() {
         while (returnStatus == 1) {
@@ -31,10 +39,10 @@ public class PostloginUI {
             String[] args = line.split(" ");
 
             switch (args[0]) {
-                case "create" -> create();
+                case "create" -> create(args);
                 case "list" -> list();
-                case "join" -> join();
-                case "observe" -> observe();
+                case "join" -> join(args);
+                case "observe" -> observe(args);
                 case "logout" -> logout();
                 case "quit" -> quit();
                 case "help" -> help();
@@ -43,31 +51,82 @@ public class PostloginUI {
         return returnStatus;
     }
 
-    private void create() {
-        //TODO: Call ServerFacade create function
+    private void create(String[] args) {
+        if (args.length == 2) {
+            String gameName = args[1];
+            String authToken = (String) loginResponse.getAuthToken();
+            CreateGameResponse createGameResponse = serverFacade.createGame(
+                    new CreateGameRequest(gameName, authToken));
+            System.out.println(String.format("Created game '%s' with ID %d",
+                    args[1], createGameResponse.getGameID()));
+        }
     }
 
     private void list() {
-        //TODO: Call ServerFacade list function
+        ListGamesResponse listGamesResponse = serverFacade.listGames(
+                (String) loginResponse.getAuthToken());
+        List<HashMap<String, Object>> games = listGamesResponse.getGames();
+        this.games = games;
+        StringBuilder stringBuilder = new StringBuilder("\nLIST OF GAMES:\n");
+        int iter = 1;
+        for (Map game : games) {
+            stringBuilder.append(String.format("%d. Game Name: %s.\n",
+                    iter, game.get("gameName")));
+            stringBuilder.append(String.format("   GameID: %d\n", ((Double) game.get("gameID")).intValue()));
+            stringBuilder.append("   Players: \n");
+            stringBuilder.append("      White User: ");
+            if (game.get("whiteUsername") != null) {
+                stringBuilder.append(game.get("whiteUsername") + "\n");
+            } else {
+                stringBuilder.append("NONE\n");
+            }
+            stringBuilder.append("      Black User: ");
+            if (game.get("blackUsername") != null) {
+                stringBuilder.append(game.get("blackUsername") + "\n");
+            } else {
+                stringBuilder.append("NONE\n");
+            }
+            iter += 1;
+        }
+        System.out.println(stringBuilder.toString());
     }
 
-    private void join() {
-        //TODO: Call ServerFacade join function
-        // Display default chess board
-        // In the future, enter gameplay mode
-        displayInitialBoard();
+    private void join(String[] args) {
+        if (args.length == 3) {
+            int gameID = Integer.valueOf(args[1]);
+            String teamColor = args[2].toUpperCase();
+            JoinGameResponse joinGameResponse = serverFacade.joinGame(
+                    new JoinGameRequest(teamColor, gameID,
+                            (String) loginResponse.getAuthToken()));
+            if (joinGameResponse != null) {
+                System.out.println(String.format(
+                        "Joined game %d on the %s team.", gameID, teamColor));
+                displayInitialBoard();
+            }
+        }
     }
 
-    private void observe() {
-        //TODO: Call ServerFacade observe function
-        // Display default chess board
-        // In the future, enter gameplay mode
+    private void observe(String[] args) {
+        if (args.length == 2) {
+            int gameID = Integer.valueOf(args[1]);
+            JoinGameResponse joinGameResponse = serverFacade.joinGame(
+                    new JoinGameRequest("", gameID,
+                            (String) loginResponse.getAuthToken()));
+            if (joinGameResponse != null) {
+                System.out.println(String.format(
+                        "Joined game %d as an observer.", gameID));
+            }
+        }
         displayInitialBoard();
     }
 
     private void logout() {
-        //TODO: Call ServerFacade logout function
-        returnStatus = 0;
+        LogoutResponse logoutResponse = serverFacade.logout((String) loginResponse.getAuthToken());
+        if (logoutResponse != null) {
+            if (logoutResponse.getCode() == 200) {
+                returnStatus = 0;
+            }
+        }
     }
 
     private void quit() {
@@ -81,13 +140,21 @@ public class PostloginUI {
     }
 
     private void displayInitialBoard() {
-        ChessBoardDisplay cBD = new ChessBoardDisplay();
-        cBD.drawBoard();
+        ChessBoardDisplay chessBoardDisplay = new ChessBoardDisplay();
+        chessBoardDisplay.drawBoard();
     }
 
-    public void setLoginResponse(LoginResponse loginResponse) {
+    public void setLoginResponse(Response loginResponse) {
         System.out.printf(welcomeMessage);
         System.out.println((String) loginResponse.getUsername());
         this.loginResponse = loginResponse;
+    }
+
+    public void setGames(List<HashMap<String, Object>> games) {
+        this.games = games;
+    }
+
+    public List<HashMap<String, Object>> getGames() {
+        return this.games;
     }
 }

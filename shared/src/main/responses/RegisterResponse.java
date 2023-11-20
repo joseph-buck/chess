@@ -6,7 +6,7 @@ import java.util.*;
 /**
  * RegisterResponse --- Class for storing data of a register response.
  */
-public class RegisterResponse {
+public class RegisterResponse extends Response {
     Map<String, Object> registerResponse = new HashMap<>();
 
     public RegisterResponse(String username, String authToken,

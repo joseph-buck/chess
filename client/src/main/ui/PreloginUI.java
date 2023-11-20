@@ -1,12 +1,19 @@
 package ui;
 
+import requests.LoginRequest;
+import requests.RegisterRequest;
 import responses.LoginResponse;
+import responses.RegisterResponse;
+import responses.Response;
+import serverfacade.ServerFacade;
+
 import java.util.Scanner;
 
 
 public class PreloginUI {
+    private ServerFacade serverFacade;
     private int returnStatus = 0;
-    private LoginResponse loginResponse;
+    private Response loginResponse = null;
 
     private static String welcomeMessage = "Welcome to 240 chess. Type 'help' to get started.";
     private static String farewellMessage = "Thanks for playing!";
@@ -20,6 +27,7 @@ public class PreloginUI {
 
     public PreloginUI() {
         System.out.println(welcomeMessage);
+        serverFacade = new ServerFacade();
     }
 
     public int run() {
@@ -44,29 +52,32 @@ public class PreloginUI {
             String username = args[1];
             String password = args[2];
             String email = args[3];
-            //TODO: Using the server facade:
-                //TODO: Send RegisterRequest here.
-                //TODO: Get RegisterResponse back
 
-            //TODO: Return the RegisterResponse object
-            //TODO: Move this print statement into PostloginUI
+            RegisterRequest regReq = new RegisterRequest(username, password, email);
+            RegisterResponse regRes = serverFacade.register(regReq);
+
+            if (regRes != null) {
+                returnStatus = 1;
+                this.loginResponse = regRes;
+            }
+
             System.out.println(String.format("Registered user: %s", username));
         }
     }
 
     public void login(String[] args) {
+        //TODO: Test logging in with wrong password, other fail cases
         if (args.length == 3) {
             String username = args[1];
             String password = args[2];
 
-            //TODO: Using the server facade:
-                //TODO: Send LoginRequest here.
-                //TODO: Get LoginResponse back
+            LoginRequest loginRequest = new LoginRequest(username, password);
+            LoginResponse loginResponse = serverFacade.login(loginRequest);
 
-            //TODO: Return the login response object
-            // loginResponse = object returned from server
-            // Only change the return status to 1 if the login was successful
-            returnStatus = 1;
+            if (loginResponse != null) {
+                returnStatus = 1;
+                this.loginResponse = loginResponse;
+            }
         }
     }
 
@@ -79,7 +90,7 @@ public class PreloginUI {
         System.out.println(helpMessage);
     }
 
-    public LoginResponse getLoginResponse() {
+    public Response getLoginResponse() {
         return loginResponse;
     }
 }

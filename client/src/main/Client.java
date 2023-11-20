@@ -1,10 +1,20 @@
+import org.eclipse.jetty.util.log.Log;
+import requests.LoginRequest;
 import responses.LoginResponse;
+import responses.Response;
 import ui.PostloginUI;
 import ui.PreloginUI;
+
+import java.util.HashMap;
+import java.util.List;
+
 import static ui.EscapeSequences.*;
 
 
 public class Client {
+    private Response loginResponse = null;
+    List<HashMap<String, Object>> games;
+
     public static void main(String[] args) {
         new Client().run();
     }
@@ -16,13 +26,20 @@ public class Client {
         while (loginStatus != 2) {
             PreloginUI preloginUI = new PreloginUI();
             loginStatus = preloginUI.run();
+            this.loginResponse = preloginUI.getLoginResponse();
 
             PostloginUI postloginUI = new PostloginUI();
             if (loginStatus == 1) {
-                postloginUI.setLoginResponse(new LoginResponse("","","",0));
+                postloginUI.setLoginResponse(this.loginResponse);
+                postloginUI.setGames(games);
                 loginStatus = postloginUI.run();
+                games = postloginUI.getGames();
             }
         }
+    }
+
+    private List<HashMap<String, Object>> getGames() {
+        return this.games;
     }
 }
 

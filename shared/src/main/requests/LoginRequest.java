@@ -6,7 +6,7 @@ import java.util.*;
 /**
  * LoginRequest --- Class for storing login request information.
  */
-public class LoginRequest {
+public class LoginRequest extends Request {
     private Map<String, Object> loginRequest = new HashMap<>();
 
     public LoginRequest(Object username, Object password) {
@@ -22,4 +22,7 @@ public class LoginRequest {
         return (String) loginRequest.get("password");
     }
 
+    public Map getMap() {
+        return loginRequest;
+    }
 }

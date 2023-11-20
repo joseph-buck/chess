@@ -19,6 +19,7 @@ public class ChessBoardDisplay {
 
         out.print(ERASE_SCREEN);
 
+        int iter = 0;
         for (ChessGame.TeamColor sideToPrint : new ChessGame.TeamColor[]{
                 ChessGame.TeamColor.WHITE, ChessGame.TeamColor.BLACK}) {
             Board newBoard = new Board();
@@ -30,6 +31,22 @@ public class ChessBoardDisplay {
 
             out.print(SET_BG_COLOR_DARK_GREY);
             out.print(SET_TEXT_COLOR_WHITE);
+
+            if (iter == 0) {
+                drawBlankRow(out);
+            }
+            iter += 1;
+        }
+    }
+
+    private static void drawBlankRow(PrintStream out) {
+        for (int squareRow = 0; squareRow < SQUARE_SIZE_IN_CHARS; ++squareRow) {
+            for (int boardCol = 0; boardCol < BOARD_SIZE_IN_SQUARES + 2; ++boardCol) {
+                setBlack(out);
+                out.print(EMPTY.repeat(SQUARE_SIZE_IN_CHARS));
+            }
+            setDarkGrey(out);
+            out.println();
         }
     }
 
@@ -72,7 +89,7 @@ public class ChessBoardDisplay {
     }
 
     private static void drawChessBoard(PrintStream out, Board board, ChessGame.TeamColor sideToPrint) {
-        if (sideToPrint == ChessGame.TeamColor.BLACK) {
+        if (sideToPrint == ChessGame.TeamColor.WHITE) {
             board = reverseBoard(board);
         }
         for (int boardRow = 0; boardRow < BOARD_SIZE_IN_SQUARES; ++boardRow) {
@@ -99,28 +116,7 @@ public class ChessBoardDisplay {
 
     private static void drawRowOfSquares(PrintStream out, int boardRow, Board board, ChessGame.TeamColor sideToPrint) {
         for (int squareRow = 0; squareRow < SQUARE_SIZE_IN_CHARS; ++squareRow) {
-
-
-            if (squareRow == SQUARE_SIZE_IN_CHARS / 2) {
-                int prefixLength = SQUARE_SIZE_IN_CHARS / 2;
-                int suffixLength = SQUARE_SIZE_IN_CHARS - prefixLength - 1;
-
-                out.print(EMPTY.repeat(prefixLength));
-                out.print(SET_TEXT_COLOR_WHITE);
-                if (sideToPrint == ChessGame.TeamColor.WHITE) {
-                    out.print(String.format(" %d ", boardRow + 1));
-                } else {
-                    out.print(String.format(" %d ", BOARD_SIZE_IN_SQUARES - boardRow));
-                }
-                out.print(EMPTY.repeat(suffixLength));
-            }
-            else {
-                out.print(EMPTY.repeat(SQUARE_SIZE_IN_CHARS));
-            }
-
-
-
-
+            drawNumber(out, squareRow, boardRow, sideToPrint);
 
             for (int boardCol = 0; boardCol < BOARD_SIZE_IN_SQUARES; ++boardCol) {
                 if ((boardCol + boardRow) % 2 == 0) {
@@ -142,28 +138,28 @@ public class ChessBoardDisplay {
                 setDarkGrey(out);
             }
 
-
-
-            if (squareRow == SQUARE_SIZE_IN_CHARS / 2) {
-                int prefixLength = SQUARE_SIZE_IN_CHARS / 2;
-                int suffixLength = SQUARE_SIZE_IN_CHARS - prefixLength - 1;
-
-                out.print(EMPTY.repeat(prefixLength));
-                out.print(SET_TEXT_COLOR_WHITE);
-                if (sideToPrint == ChessGame.TeamColor.WHITE) {
-                    out.print(String.format(" %d ", boardRow + 1));
-                } else {
-                    out.print(String.format(" %d ", BOARD_SIZE_IN_SQUARES - boardRow));
-                }
-                out.print(EMPTY.repeat(suffixLength));
-            }
-            else {
-                out.print(EMPTY.repeat(SQUARE_SIZE_IN_CHARS));
-            }
-
-
+            drawNumber(out, squareRow, boardRow, sideToPrint);
 
             out.println();
+        }
+    }
+
+    private static void drawNumber(PrintStream out, int squareRow, int boardRow,
+                                   ChessGame.TeamColor sideToPrint) {
+        int prefixLength = SQUARE_SIZE_IN_CHARS / 2;
+        int suffixLength = SQUARE_SIZE_IN_CHARS - prefixLength - 1;
+
+        if (squareRow == SQUARE_SIZE_IN_CHARS / 2) {
+            out.print(EMPTY.repeat(prefixLength));
+            out.print(SET_TEXT_COLOR_WHITE);
+            if (sideToPrint == ChessGame.TeamColor.WHITE) {
+                out.print(String.format(" %d ", boardRow + 1));
+            } else {
+                out.print(String.format(" %d ", BOARD_SIZE_IN_SQUARES - boardRow));
+            }
+            out.print(EMPTY.repeat(suffixLength));
+        } else {
+            out.print(EMPTY.repeat(SQUARE_SIZE_IN_CHARS));
         }
     }
 

@@ -30,6 +30,7 @@ public class CreateGameService {
                 message = "Error: bad request";
                 code = 400;
             } else if (authDAOObj.readToken(authTokenString) == null) {
+                System.out.println(authTokenString);
                 // Case: The provided authTokenString is not valid.
                 gameID = null;
                 message = "Error: unauthorized";
