@@ -57,11 +57,15 @@ public class PreloginUI {
             RegisterResponse regRes = serverFacade.register(regReq);
 
             if (regRes != null) {
-                returnStatus = 1;
-                this.loginResponse = regRes;
-            }
+                if (regRes.getCode() == 200) {
+                    returnStatus = 1;
+                    this.loginResponse = regRes;
+                    System.out.println(String.format("Registered user: %s", username));
 
-            System.out.println(String.format("Registered user: %s", username));
+                }
+//                returnStatus = 1;
+//                this.loginResponse = regRes;
+            }
         }
     }
 
@@ -75,8 +79,12 @@ public class PreloginUI {
             LoginResponse loginResponse = serverFacade.login(loginRequest);
 
             if (loginResponse != null) {
-                returnStatus = 1;
-                this.loginResponse = loginResponse;
+                if (loginResponse.getCode() == 200) {
+                    returnStatus = 1;
+                    this.loginResponse = loginResponse;
+                }
+//                returnStatus = 1;
+//                this.loginResponse = loginResponse;
             }
         }
     }
