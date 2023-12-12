@@ -99,9 +99,12 @@ public class PostloginUI {
                     new JoinGameRequest(teamColor, gameID,
                             (String) loginResponse.getAuthToken()));
             if (joinGameResponse != null) {
-                System.out.println(String.format(
-                        "Joined game %d on the %s team.", gameID, teamColor));
-                displayInitialBoard();
+                if (joinGameResponse.getCode() == 200) {
+                    System.out.println(String.format(
+                            "Joined game %d on the %s team.", gameID, teamColor));
+                    displayInitialBoard();
+                    returnStatus = 2;
+                }
             }
         }
     }
@@ -113,11 +116,14 @@ public class PostloginUI {
                     new JoinGameRequest("", gameID,
                             (String) loginResponse.getAuthToken()));
             if (joinGameResponse != null) {
-                System.out.println(String.format(
-                        "Joined game %d as an observer.", gameID));
+                if (joinGameResponse.getCode() == 200) {
+                    System.out.println(String.format(
+                            "Joined game %d as an observer.", gameID));
+                }
             }
         }
         displayInitialBoard();
+        returnStatus = 2;
     }
 
     private void logout() {
@@ -132,7 +138,7 @@ public class PostloginUI {
     private void quit() {
         logout();
         System.out.println(farewellMessage);
-        returnStatus = 2;
+        returnStatus = -1;
     }
 
     private void help() {

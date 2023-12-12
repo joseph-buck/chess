@@ -2,6 +2,7 @@ import org.eclipse.jetty.util.log.Log;
 import requests.LoginRequest;
 import responses.LoginResponse;
 import responses.Response;
+import ui.GameplayUI;
 import ui.PostloginUI;
 import ui.PreloginUI;
 
@@ -23,18 +24,27 @@ public class Client {
         int loginStatus = 0;
         System.out.print(SET_BG_COLOR_DARK_GREY);
 
-        while (loginStatus != 2) {
+        while (loginStatus != -1) {
             PreloginUI preloginUI = new PreloginUI();
-            loginStatus = preloginUI.run();
-            this.loginResponse = preloginUI.getLoginResponse();
+            if (loginStatus == 0) {
+                loginStatus = preloginUI.run();
+                this.loginResponse = preloginUI.getLoginResponse();
+            }
 
             PostloginUI postloginUI = new PostloginUI();
-            if (loginStatus == 1) {
+            if (loginStatus == 1) { // Logged in
                 postloginUI.setLoginResponse(this.loginResponse);
                 postloginUI.setGames(games);
                 loginStatus = postloginUI.run();
                 games = postloginUI.getGames();
             }
+
+            GameplayUI gameplayUI = new GameplayUI();
+            if (loginStatus == 2) { // Logged in and in a game
+                loginStatus = gameplayUI.run();
+            }
+
+            //TODO: For loginStatus == 3, have an observer UI that doesn't have make move, resign, etc.
         }
     }
 

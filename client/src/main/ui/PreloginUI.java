@@ -91,7 +91,7 @@ public class PreloginUI {
 
     public void quit() {
         System.out.println(farewellMessage);
-        returnStatus = 2;
+        returnStatus = -1;
     }
 
     public void help() {
