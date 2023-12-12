@@ -1,3 +1,4 @@
+import clientwebsocket.WsClient;
 import org.eclipse.jetty.util.log.Log;
 import requests.LoginRequest;
 import responses.LoginResponse;
@@ -15,6 +16,7 @@ import static ui.EscapeSequences.*;
 public class Client {
     private Response loginResponse = null;
     List<HashMap<String, Object>> games;
+    WsClient wsClient = null;
 
     public static void main(String[] args) {
         new Client().run();
@@ -37,15 +39,16 @@ public class Client {
                 postloginUI.setGames(games);
                 loginStatus = postloginUI.run();
                 games = postloginUI.getGames();
+                wsClient = postloginUI.getWsClient();
             }
 
-            if (loginStatus == 2) { // Logged in and in a game
-                GameplayUI gameplayUI = new GameplayUI(loginStatus);
+            if ((loginStatus == 2) && (wsClient != null)) { // Logged in and in a game
+                GameplayUI gameplayUI = new GameplayUI(loginStatus, wsClient);
                 loginStatus = gameplayUI.run();
             }
 
-            if (loginStatus == 3) { // Logged in and observing a game
-                GameplayUI gameplayUI = new GameplayUI(loginStatus);
+            if ((loginStatus == 3) && (wsClient != null)) { // Logged in and observing a game
+                GameplayUI gameplayUI = new GameplayUI(loginStatus, wsClient);
                 loginStatus = gameplayUI.run();
             }
         }

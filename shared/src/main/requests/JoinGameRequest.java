@@ -27,7 +27,7 @@ public class JoinGameRequest extends Request {
     }
 
     public Integer getGameID() {
-        return (Integer) joinGameRequest.get("gameID");
+        return ((Double) joinGameRequest.get("gameID")).intValue();
     }
 
     public String getAuthToken() {

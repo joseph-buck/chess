@@ -9,6 +9,7 @@ import clientwebsocket.WsClient;
 public class GameplayUI {
     private ServerFacade serverFacade;
     private int returnStatus;
+    private WsClient wsClient;
 
     private static String welcomeMessage = "Joined game %s as %s.";
     private static String leaveFarewellMessage = "Leaving game %s.";
@@ -30,19 +31,21 @@ public class GameplayUI {
             highlight - legal moves
             """;
 
-    public GameplayUI(int loginStatus) {
+    public GameplayUI(int loginStatus, WsClient wsClient) {
         serverFacade = new ServerFacade();
         returnStatus = loginStatus;
-        WsClient ws = null;
-        try {
-            ws = new WsClient();
-        } catch (Exception ex) {
-            System.out.println(ex);
-        }
+        wsClient = wsClient;
     }
 
     public int run() {
         System.out.println(welcomeMessage);
+        /*if (wsClient != null) {
+            try {
+                wsClient.send("THIS IS MY MESSAGE");
+            } catch (Exception ex) {
+                System.out.println(ex);
+            }
+        }*/
         while (returnStatus == 2) {
             System.out.printf(promptMessage);
             Scanner scanner = new Scanner(System.in);

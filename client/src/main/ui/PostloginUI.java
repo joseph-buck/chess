@@ -1,5 +1,6 @@
 package ui;
 
+import clientwebsocket.WsClient;
 import requests.CreateGameRequest;
 import requests.JoinGameRequest;
 import responses.*;
@@ -13,6 +14,7 @@ public class PostloginUI {
     private int returnStatus = 1;
     private Response loginResponse;
     private List<HashMap<String, Object>> games;
+    private WsClient wsClient = null;
 
     private static String welcomeMessage = "Logged in as ";
     private static String farewellMessage = "Thanks for playing!";
@@ -95,6 +97,17 @@ public class PostloginUI {
         if (args.length == 3) {
             int gameID = Integer.valueOf(args[1]);
             String teamColor = args[2].toUpperCase();
+
+            this.wsClient = serverFacade.joinGame(new JoinGameRequest(teamColor, gameID,
+                            (String) loginResponse.getAuthToken()));
+
+            displayInitialBoard();
+            returnStatus = 2;
+            }
+        }
+        /*if (args.length == 3) {
+            int gameID = Integer.valueOf(args[1]);
+            String teamColor = args[2].toUpperCase();
             JoinGameResponse joinGameResponse = serverFacade.joinGame(
                     new JoinGameRequest(teamColor, gameID,
                             (String) loginResponse.getAuthToken()));
@@ -107,10 +120,21 @@ public class PostloginUI {
                 }
             }
         }
-    }
+    }*/
 
     private void observe(String[] args) {
         if (args.length == 2) {
+            int gameID = Integer.valueOf(args[1]);
+            String teamColor = "";
+
+            this.wsClient = serverFacade.joinGame(new JoinGameRequest(teamColor, gameID,
+                    (String) loginResponse.getAuthToken()));
+
+            displayInitialBoard();
+            returnStatus = 3;
+        }
+    }
+        /*if (args.length == 2) {
             int gameID = Integer.valueOf(args[1]);
             JoinGameResponse joinGameResponse = serverFacade.joinGame(
                     new JoinGameRequest("", gameID,
@@ -124,7 +148,7 @@ public class PostloginUI {
         }
         displayInitialBoard();
         returnStatus = 3;
-    }
+    }*/
 
     private void logout() {
         LogoutResponse logoutResponse = serverFacade.logout((String) loginResponse.getAuthToken());
@@ -162,5 +186,9 @@ public class PostloginUI {
 
     public List<HashMap<String, Object>> getGames() {
         return this.games;
+    }
+
+    public WsClient getWsClient() {
+        return this.wsClient;
     }
 }

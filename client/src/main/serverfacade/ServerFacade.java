@@ -1,8 +1,10 @@
 package serverfacade;
 
+import clientwebsocket.WsClient;
 import com.google.gson.Gson;
 import requests.*;
 import responses.*;
+import webSocketMessages.userCommands.userGameCommands.JoinPlayerCommand;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -154,7 +156,18 @@ public class ServerFacade {
     }
 
     // Join game and Observe game
-    public JoinGameResponse joinGame(JoinGameRequest joinGameRequest) {
+    public WsClient joinGame(JoinGameRequest joinGameRequest) {
+        WsClient ws = null;
+        try {
+            JoinPlayerCommand joinPlayerCommand = new JoinPlayerCommand(joinGameRequest);
+            ws = new WsClient();
+            ws.send(new Gson().toJson(joinPlayerCommand));
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
+        return ws;
+    }
+    /*public JoinGameResponse joinGame(JoinGameRequest joinGameRequest) {
         HttpURLConnection connection = null;
         try {
             URL url = new URL("http://localhost:8080/game");
@@ -186,7 +199,7 @@ public class ServerFacade {
                 return null;
             }
         }
-    }
+    }*/
 
     // Logout
     public LogoutResponse logout(String authToken) {

@@ -174,7 +174,7 @@ public class FacadeTests {
                 "Games list had the wrong length.");
     }
 
-    @Test
+    /*@Test
     public void joinGameSuccessCase() {
         // Join a game with a registered user
         RegisterRequest registerRequest = new RegisterRequest(
@@ -190,9 +190,9 @@ public class FacadeTests {
 
         assertEquals(200, joinGameResponse.getCode(),
                 "Code returned was not 200, 'Successful'");
-    }
+    }*/
 
-    @Test
+    /*@Test
     public void joinGameFailureCase() {
         // Attempt to join a game that doesn't exist with a registered user
         RegisterRequest registerRequest = new RegisterRequest(
@@ -204,7 +204,7 @@ public class FacadeTests {
 
         assertEquals(400, joinGameResponse.getCode(),
                 "Code returned was not 400, 'Bad Request'.");
-    }
+    }*/
 
     @Test
     public void logoutSuccessCase() {

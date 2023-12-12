@@ -4,6 +4,7 @@ import chess.ChessGame;
 import com.google.gson.Gson;
 import models.Game;
 
+import java.io.Closeable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -47,6 +48,16 @@ public class GameDAO {
             """;
     private final String clearGameTable = """
             DELETE FROM game;
+            """;
+    private final String setWhiteUsername = """
+            UPDATE game
+            SET whiteUsername = ?
+            WHERE gameID = ?
+            """;
+    private final String setBlackUsername = """
+            UPDATE game
+            SET blackUsername = ?
+            WHERE gameID = ?
             """;
 
     public void initGameTable() throws DataAccessException {
@@ -134,6 +145,28 @@ public class GameDAO {
             return gameList;
         } catch (SQLException ex) {
             throw new DataAccessException(ex.getMessage());
+        }
+    }
+
+    public boolean setWhiteUsername(String whiteUsername, int gameID) throws DataAccessException {
+        try (CloseableTuple tupleResult = executeStatement(setWhiteUsername,
+                new ArrayList<>(Arrays.asList(whiteUsername, gameID)))) {
+            if (tupleResult == null) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+
+    public boolean setBlackUsername(String blackUsername, int gameID) throws DataAccessException {
+        try (CloseableTuple tupleResult = executeStatement(setBlackUsername,
+                new ArrayList<>(Arrays.asList(blackUsername, gameID)))) {
+            if (tupleResult == null) {
+                return false;
+            } else {
+                return true;
+            }
         }
     }
 
