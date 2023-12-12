@@ -123,7 +123,7 @@ public class PostloginUI {
             }
         }
         displayInitialBoard();
-        returnStatus = 2;
+        returnStatus = 3;
     }
 
     private void logout() {

@@ -39,12 +39,15 @@ public class Client {
                 games = postloginUI.getGames();
             }
 
-            GameplayUI gameplayUI = new GameplayUI();
             if (loginStatus == 2) { // Logged in and in a game
+                GameplayUI gameplayUI = new GameplayUI(loginStatus);
                 loginStatus = gameplayUI.run();
             }
 
-            //TODO: For loginStatus == 3, have an observer UI that doesn't have make move, resign, etc.
+            if (loginStatus == 3) { // Logged in and observing a game
+                GameplayUI gameplayUI = new GameplayUI(loginStatus);
+                loginStatus = gameplayUI.run();
+            }
         }
     }
 

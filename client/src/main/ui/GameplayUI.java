@@ -3,6 +3,7 @@ package ui;
 import serverfacade.ServerFacade;
 
 import java.util.Scanner;
+import clientwebsocket.WsClient;
 
 
 public class GameplayUI {
@@ -13,6 +14,7 @@ public class GameplayUI {
     private static String leaveFarewellMessage = "Leaving game %s.";
     private static String resignFarewellMessage = "Resigning from game %s.";
     private static String promptMessage = "[IN_GAME] >>> ";
+    private static String observerPromptMessage = "[OBSERVING_GAME] >>> ";
     private static String helpMessage = """            
             help - with possible commands
             redraw - the chess board
@@ -21,13 +23,26 @@ public class GameplayUI {
             resign - the game
             highlight - legal moves
             """;
+    private static String observerHelpMessage = """
+            help - with possible commands
+            redraw - the chess board
+            leave - the current game
+            highlight - legal moves
+            """;
 
-    public GameplayUI() {
+    public GameplayUI(int loginStatus) {
         serverFacade = new ServerFacade();
-        returnStatus = 2;
+        returnStatus = loginStatus;
+        WsClient ws = null;
+        try {
+            ws = new WsClient();
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
     }
 
     public int run() {
+        System.out.println(welcomeMessage);
         while (returnStatus == 2) {
             System.out.printf(promptMessage);
             Scanner scanner = new Scanner(System.in);
@@ -43,11 +58,28 @@ public class GameplayUI {
                 case "highlight" -> highlight();
             }
         }
+        while (returnStatus == 3) {
+            System.out.printf(observerPromptMessage);
+            Scanner scanner = new Scanner(System.in);
+            String line = scanner.nextLine();
+            String[] args = line.split(" ");
+
+            switch(args[0]) {
+                case "help" -> observerHelp();
+                case "redraw" -> redraw();
+                case "leave" -> leave();
+                case "highlight" -> highlight();
+            }
+        }
         return returnStatus;
     }
 
     private void help() {
         System.out.println(helpMessage);
+    }
+    
+    private void observerHelp() {
+        System.out.println(observerHelpMessage);
     }
 
     private void redraw() {

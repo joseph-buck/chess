@@ -25,6 +25,9 @@ public class Server {
         Spark.externalStaticFileLocation(
                 "/home/joseph/Desktop/semester-2023-fall/cs240/chess/web");
 
+        // Specify the websocket endpoint
+        Spark.webSocket("/connect", WsServer.class);
+
         // Methods to receive HTTP inputs and call the correct functions
         Spark.delete("/db", this::clearApplication);
         Spark.post("/user", this::register);
