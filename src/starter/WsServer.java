@@ -3,12 +3,16 @@ import com.google.gson.Gson;
 import dataAccess.AuthDAO;
 import dataAccess.DataAccessException;
 import dataAccess.GameDAO;
+import models.AuthToken;
 import org.eclipse.jetty.websocket.api.annotations.*;
 import org.eclipse.jetty.websocket.api.*;
 import org.glassfish.grizzly.utils.Pair;
+import webSocketMessages.serverMessages.ServerMessage;
 import webSocketMessages.serverMessages.serverSpecificMessages.LoadGameMessage;
 import webSocketMessages.serverMessages.serverSpecificMessages.PlayerJoinedNotification;
 import webSocketMessages.userCommands.userGameCommands.JoinPlayerCommand;
+import webSocketMessages.serverMessages.serverSpecificMessages.ErrorMessage;
+import static webSocketMessages.serverMessages.ServerMessage.ServerMessageType.*;
 
 import java.io.IOException;
 import java.util.*;
@@ -38,10 +42,55 @@ public class WsServer {
     @OnWebSocketMessage
     public void onMessage(Session session, String message) throws IOException {
         Map messageMap = new Gson().fromJson(message, Map.class);
+        System.out.println(messageMap);
         if (Objects.equals((String) messageMap.get("commandType"), "JOIN_PLAYER")) {
             JoinPlayerCommand joinPlayerCommand = new Gson().fromJson(message, JoinPlayerCommand.class);
-            this.checkInGameSessions(session, joinPlayerCommand.getJoinGameRequest().getGameID());
-            joinPlayer(joinPlayerCommand, session);
+            int code = 0;
+            //TODO: Change this so I just use GAME DAO to see if it was successful
+            
+            try {
+                models.Game game = new GameDAO().findGame(joinPlayerCommand.getGameID());
+                String color = (String) messageMap.get("playerColor");
+                AuthToken authToken = new AuthDAO().readToken(joinPlayerCommand.getAuthString());
+
+                if (authToken == null) {
+                    code = 400;
+                } else {
+                    String username = authToken.getUsername();
+                    if (game == null) {
+                        code = 400;
+                    } else {
+                        if (color.compareTo("WHITE") == 0) {
+                            if (game.getWhiteUsername() == null) {
+                                code = 400;
+                            } else if (game.getWhiteUsername().compareTo(username) == 0) {
+                                code = 200;
+                            } else {
+                                code = 400;
+                            }
+                        } else if (color.compareTo("BLACK") == 0) {
+                            if (game.getBlackUsername() == null) {
+                                code = 400;
+                            } else if (game.getBlackUsername().compareTo(username) == 0) {
+                                code = 200;
+                            } else {
+                                code = 400;
+                            }
+                        }
+                    }
+                }
+
+            } catch (DataAccessException ex) {
+                System.out.println(ex);
+            }
+
+            if (code != 200) {//(joinPlayerCommand.getCode() != 200) {
+                ErrorMessage errorMessage = new ErrorMessage(ERROR, joinPlayerCommand.getCode());
+                session.getRemote().sendString(new Gson().toJson(errorMessage));
+            } else {
+                this.checkInGameSessions(session, joinPlayerCommand.getGameID());
+                joinPlayer(joinPlayerCommand, session);
+            }
         }
         //TODO: Implement logging so I can debug the server easier
     }
@@ -63,10 +112,7 @@ public class WsServer {
     }
 
     private void joinPlayer(JoinPlayerCommand joinPlayerCommand, Session rootSession) {
-        //TODO: execute commands to add the player to the game in the database
-        //TODO: IF that was successful, proceed with the remainder of this function
-
-        int gameID = joinPlayerCommand.getJoinGameRequest().getGameID();
+        int gameID = joinPlayerCommand.getGameID();
 
         String username = "";
         models.Game game = null;
@@ -74,23 +120,11 @@ public class WsServer {
         try {
             username = new AuthDAO().readToken(joinPlayerCommand.getAuthString()).getUsername();
             game = new GameDAO().findGame(gameID);
-            color = ChessGame.TeamColor.valueOf(joinPlayerCommand.getJoinGameRequest().getPlayerColor());
+            color = joinPlayerCommand.getPlayerColor();
         } catch (DataAccessException ex) {
             System.out.println(ex);
         }
 
-        /*// Add the player to the game in the database
-        try {
-            if ((color == ChessGame.TeamColor.WHITE) && (game.getWhiteUsername() == null)) {
-                new GameDAO().setWhiteUsername(username, gameID);
-            } else if ((color == ChessGame.TeamColor.BLACK) && (game.getBlackUsername() == null)) {
-                new GameDAO().setBlackUsername(username, gameID);
-            }
-        } catch (DataAccessException ex) {
-            System.out.println(ex);
-        }*/
-
-        
         // Sending the "load game" notification to the root session
         LoadGameMessage loadGameMessage = new LoadGameMessage(game);
         try{
@@ -100,6 +134,7 @@ public class WsServer {
         }
 
         // Sending the "user joined" notification to all sessions in game except new session.
+        //TODO: STILL NEED TO TEST THIS PART
         PlayerJoinedNotification playerJoinedNotification 
                 = new PlayerJoinedNotification(joinPlayerCommand, username);
         for (Session session : gameSessions.get(gameID).getSecond()) {

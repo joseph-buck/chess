@@ -1,31 +1,37 @@
 package webSocketMessages.userCommands.userGameCommands;
 
+import chess.ChessGame;
 import requests.JoinGameRequest;
+import responses.JoinGameResponse;
 import webSocketMessages.userCommands.UserGameCommand;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class JoinPlayerCommand extends UserGameCommand {
-    private JoinGameRequest joinGameRequest;
+    //private JoinGameRequest joinGameRequest;
+    private int gameID;
+    private ChessGame.TeamColor color;
+    private int code;
 
-    public JoinPlayerCommand(JoinGameRequest joinGameRequest) {
+    public JoinPlayerCommand(JoinGameRequest joinGameRequest, JoinGameResponse joinGameResponse) {
         super(joinGameRequest.getAuthToken());
         this.commandType = CommandType.JOIN_PLAYER;
-        this.joinGameRequest = joinGameRequest;
+        gameID = joinGameRequest.getGameID();
+        color = ChessGame.TeamColor.valueOf(joinGameRequest.getPlayerColor());
+        code = joinGameResponse.getCode();
     }
 
     public CommandType getCommandType() {
         return this.commandType;
     }
 
-    public JoinGameRequest getJoinGameRequest() {
-        return this.joinGameRequest;
+    public int getGameID() {
+        return gameID;
     }
 
-    /*public Map getMap() {
-        Map joinPlayerCommand = new HashMap();
-        joinPlayerCommand.put(this.authToken)
-        return joinGameRequest.getMap();
-    }*/
+    public ChessGame.TeamColor getPlayerColor() {
+        return color;
+    }
+
+    public Integer getCode() {
+        return (Integer) code;
+    }
 }

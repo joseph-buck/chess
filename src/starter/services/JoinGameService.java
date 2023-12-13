@@ -18,7 +18,8 @@ public class JoinGameService {
         int code;
 
         String playerColor = request.getPlayerColor();
-        Integer gameID = request.getGameID();
+        //Integer gameID = request.getGameID();
+        Integer gameID = (Integer) request.getMap().get("gameID");
         String authTokenString = request.getAuthToken();
 
         try {

@@ -1,14 +1,23 @@
 package ui;
 
+import chess.ChessGame;
+import com.google.gson.Gson;
+import requests.JoinGameRequest;
+import responses.JoinGameResponse;
 import serverfacade.ServerFacade;
 
+import java.io.FileWriter;
+import java.io.Writer;
 import java.util.Scanner;
 import clientwebsocket.WsClient;
+import webSocketMessages.userCommands.userGameCommands.JoinPlayerCommand;
 
 
 public class GameplayUI {
     private ServerFacade serverFacade;
     private int returnStatus;
+    private JoinGameRequest joinGameRequest;
+    private JoinGameResponse joinGameResponse;
     private WsClient wsClient;
 
     private static String welcomeMessage = "Joined game %s as %s.";
@@ -31,21 +40,29 @@ public class GameplayUI {
             highlight - legal moves
             """;
 
-    public GameplayUI(int loginStatus, WsClient wsClient) {
+    public GameplayUI(int loginStatus, JoinGameRequest joinGameRequest, JoinGameResponse joinGameResponse) {
         serverFacade = new ServerFacade();
         returnStatus = loginStatus;
-        wsClient = wsClient;
+        this.joinGameRequest = joinGameRequest;
+        this.joinGameResponse = joinGameResponse;
+
+        // Send JOIN_PLAYER or JOIN_OBSERVER
+        try {
+            wsClient = new WsClient();
+            if (returnStatus == 2) {
+                JoinPlayerCommand joinPlayerCommand = new JoinPlayerCommand(joinGameRequest, joinGameResponse);
+                wsClient.send(new Gson().toJson(joinPlayerCommand, java.util.Map.class));
+            } else if (returnStatus == 3) {
+                //TODO: SEND JOIN_OBSERVER HERE
+            }
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
     }
 
     public int run() {
         System.out.println(welcomeMessage);
-        /*if (wsClient != null) {
-            try {
-                wsClient.send("THIS IS MY MESSAGE");
-            } catch (Exception ex) {
-                System.out.println(ex);
-            }
-        }*/
+
         while (returnStatus == 2) {
             System.out.printf(promptMessage);
             Scanner scanner = new Scanner(System.in);

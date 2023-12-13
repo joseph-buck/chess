@@ -13,6 +13,8 @@ public class PostloginUI {
     private ServerFacade serverFacade;
     private int returnStatus = 1;
     private Response loginResponse;
+    private JoinGameRequest joinGameRequest;
+    private JoinGameResponse joinGameResponse;
     private List<HashMap<String, Object>> games;
     private WsClient wsClient = null;
 
@@ -94,7 +96,7 @@ public class PostloginUI {
     }
 
     private void join(String[] args) {
-        if (args.length == 3) {
+        /*if (args.length == 3) {
             int gameID = Integer.valueOf(args[1]);
             String teamColor = args[2].toUpperCase();
 
@@ -104,26 +106,28 @@ public class PostloginUI {
             displayInitialBoard();
             returnStatus = 2;
             }
-        }
-        /*if (args.length == 3) {
+        }*/
+        if (args.length == 3) {
             int gameID = Integer.valueOf(args[1]);
             String teamColor = args[2].toUpperCase();
-            JoinGameResponse joinGameResponse = serverFacade.joinGame(
-                    new JoinGameRequest(teamColor, gameID,
-                            (String) loginResponse.getAuthToken()));
+            joinGameRequest = new JoinGameRequest(teamColor, gameID,
+                    (String) loginResponse.getAuthToken());
+            joinGameResponse = serverFacade.joinGame(joinGameRequest);
             if (joinGameResponse != null) {
                 if (joinGameResponse.getCode() == 200) {
                     System.out.println(String.format(
                             "Joined game %d on the %s team.", gameID, teamColor));
                     displayInitialBoard();
                     returnStatus = 2;
+                } else {
+                    returnStatus = 2;
                 }
             }
         }
-    }*/
+    }
 
     private void observe(String[] args) {
-        if (args.length == 2) {
+        /*if (args.length == 2) {
             int gameID = Integer.valueOf(args[1]);
             String teamColor = "";
 
@@ -133,8 +137,8 @@ public class PostloginUI {
             displayInitialBoard();
             returnStatus = 3;
         }
-    }
-        /*if (args.length == 2) {
+    }*/
+        if (args.length == 2) {
             int gameID = Integer.valueOf(args[1]);
             JoinGameResponse joinGameResponse = serverFacade.joinGame(
                     new JoinGameRequest("", gameID,
@@ -148,7 +152,7 @@ public class PostloginUI {
         }
         displayInitialBoard();
         returnStatus = 3;
-    }*/
+    }
 
     private void logout() {
         LogoutResponse logoutResponse = serverFacade.logout((String) loginResponse.getAuthToken());
@@ -188,7 +192,11 @@ public class PostloginUI {
         return this.games;
     }
 
-    public WsClient getWsClient() {
-        return this.wsClient;
+    public JoinGameRequest getJoinGameRequest() {
+        return joinGameRequest;
+    }
+
+    public JoinGameResponse getJoinGameResponse() {
+        return joinGameResponse;
     }
 }

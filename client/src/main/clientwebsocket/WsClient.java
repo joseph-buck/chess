@@ -1,5 +1,8 @@
 package clientwebsocket;
 
+import com.google.gson.Gson;
+import webSocketMessages.userCommands.userGameCommands.JoinPlayerCommand;
+
 import javax.websocket.*;
 import java.io.IOException;
 import java.net.URI;
@@ -17,6 +20,7 @@ public class WsClient extends Endpoint {
             @Override
             public void onMessage(String message) {
                 System.out.println(message);
+                new Gson().fromJson(message, JoinPlayerCommand.class);
             }
         });
     }
